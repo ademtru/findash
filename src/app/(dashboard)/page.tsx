@@ -39,14 +39,14 @@ export default async function OverviewPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-        <p className="text-sm text-muted-foreground mt-1">Your financial snapshot</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Overview</h1>
+        <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Financial snapshot</p>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        <StatCard title="Net Worth" value={`$${netWorth.toLocaleString()}`} />
-        <StatCard title="Total Income" value={`$${income.toLocaleString()}`} trend="up" />
+        <StatCard title="Net Worth" value={`$${netWorth.toLocaleString()}`} accent="cyan" />
+        <StatCard title="Total Income" value={`$${income.toLocaleString()}`} trend="up" accent="emerald" />
         <StatCard title="Total Expenses" value={`$${expenses.toLocaleString()}`} trend="down" />
-        <StatCard title="Savings Rate" value={`${(savingsRate * 100).toFixed(1)}%`} trend={savingsRate > 0.2 ? 'up' : 'neutral'} />
+        <StatCard title="Savings Rate" value={`${(savingsRate * 100).toFixed(1)}%`} trend={savingsRate > 0.2 ? 'up' : 'neutral'} accent="violet" />
       </div>
       <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         <CashFlowChart data={cashFlowData} />

@@ -17,8 +17,8 @@ export default async function InvestmentsPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Investments</h1>
-        <p className="text-sm text-muted-foreground mt-1">Portfolio holdings and allocation</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Investments</h1>
+        <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Portfolio holdings and allocation</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <StatCard title="Total Invested" value={`$${totalInvested.toLocaleString()}`} trend="up" />

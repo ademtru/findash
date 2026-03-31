@@ -34,8 +34,8 @@ export default async function SpendingPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Spending</h1>
-        <p className="text-sm text-muted-foreground mt-1">Breakdown by category and time</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Spending</h1>
+        <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Breakdown by category and time</p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <StatCard title="Total Spent" value={`$${totalSpend.toLocaleString()}`} trend="down" />
@@ -46,21 +46,21 @@ export default async function SpendingPage() {
         <SpendingDonut data={categoryData.slice(0, 6)} />
         <SpendingTrends data={trendData} categories={topCategories} />
       </div>
-      <div className="rounded-xl border border-border/50 overflow-hidden bg-card/50">
+      <div className="glass rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border/50 bg-muted/30">
-              <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Category</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</th>
-              <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wide">% of Spend</th>
+            <tr className="border-b border-white/[0.05]">
+              <th className="px-5 py-3.5 text-left text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Category</th>
+              <th className="px-5 py-3.5 text-right text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Total</th>
+              <th className="px-5 py-3.5 text-right text-[10px] font-semibold text-slate-500 uppercase tracking-widest">% of Spend</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-border/30">
-            {categoryData.map(({ category, amount }) => (
-              <tr key={category} className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 font-medium">{category}</td>
-                <td className="px-4 py-3 text-right tabular-nums">${amount.toFixed(2)}</td>
-                <td className="px-4 py-3 text-right text-muted-foreground tabular-nums">
+          <tbody>
+            {categoryData.map(({ category, amount }, i) => (
+              <tr key={category} className={`border-b border-white/[0.03] hover:bg-white/[0.03] transition-colors ${i === categoryData.length - 1 ? 'border-0' : ''}`}>
+                <td className="px-5 py-3.5 font-medium text-slate-300">{category}</td>
+                <td className="px-5 py-3.5 text-right tabular-nums text-white font-medium">${amount.toFixed(2)}</td>
+                <td className="px-5 py-3.5 text-right tabular-nums text-slate-400">
                   {totalSpend > 0 ? ((amount / totalSpend) * 100).toFixed(1) : '0.0'}%
                 </td>
               </tr>
