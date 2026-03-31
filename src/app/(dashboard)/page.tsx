@@ -10,20 +10,10 @@ import {
   groupByMonth,
 } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
-import type { TransactionData } from '@/types/transaction'
-
-async function getData(): Promise<TransactionData> {
-  try {
-    const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${base}/api/transactions`, { cache: 'no-store' })
-    return res.json()
-  } catch {
-    return { transactions: [] }
-  }
-}
+import { getTransactions } from '@/lib/data'
 
 export default async function OverviewPage() {
-  const { transactions } = await getData()
+  const { transactions } = await getTransactions()
 
   const income = getTotalIncome(transactions)
   const expenses = getTotalExpenses(transactions)

@@ -3,20 +3,10 @@ import { SpendingTrends } from '@/components/dashboard/SpendingTrends'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { groupByCategory, groupByMonth, getTotalExpenses } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
-import type { TransactionData } from '@/types/transaction'
-
-async function getData(): Promise<TransactionData> {
-  try {
-    const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${base}/api/transactions`, { cache: 'no-store' })
-    return res.json()
-  } catch {
-    return { transactions: [] }
-  }
-}
+import { getTransactions } from '@/lib/data'
 
 export default async function SpendingPage() {
-  const { transactions } = await getData()
+  const { transactions } = await getTransactions()
   const expenses = transactions.filter(t => t.type === 'expense')
 
   const byCategory = groupByCategory(expenses)

@@ -2,20 +2,10 @@ import { HoldingsTable } from '@/components/dashboard/HoldingsTable'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { getInvestmentHoldings } from '@/lib/transactions'
-import type { TransactionData } from '@/types/transaction'
-
-async function getData(): Promise<TransactionData> {
-  try {
-    const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${base}/api/transactions`, { cache: 'no-store' })
-    return res.json()
-  } catch {
-    return { transactions: [] }
-  }
-}
+import { getTransactions } from '@/lib/data'
 
 export default async function InvestmentsPage() {
-  const { transactions } = await getData()
+  const { transactions } = await getTransactions()
   const holdings = getInvestmentHoldings(transactions)
   const totalInvested = holdings.reduce((sum, h) => sum + h.cost, 0)
 

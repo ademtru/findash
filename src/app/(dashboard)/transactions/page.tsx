@@ -1,18 +1,8 @@
 import { TransactionsTable } from '@/components/dashboard/TransactionsTable'
-import type { TransactionData } from '@/types/transaction'
-
-async function getData(): Promise<TransactionData> {
-  try {
-    const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${base}/api/transactions`, { cache: 'no-store' })
-    return res.json()
-  } catch {
-    return { transactions: [] }
-  }
-}
+import { getTransactions } from '@/lib/data'
 
 export default async function TransactionsPage() {
-  const { transactions } = await getData()
+  const { transactions } = await getTransactions()
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>

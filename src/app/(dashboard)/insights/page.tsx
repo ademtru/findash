@@ -1,20 +1,10 @@
 import { MonthlyNarrativeCard, TrendCard } from '@/components/dashboard/InsightCard'
 import { AnomalyAlert } from '@/components/dashboard/AnomalyAlert'
 import { Sparkles } from 'lucide-react'
-import type { InsightsData } from '@/types/transaction'
-
-async function getData(): Promise<InsightsData> {
-  try {
-    const base = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-    const res = await fetch(`${base}/api/insights`, { cache: 'no-store' })
-    return res.json()
-  } catch {
-    return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
-  }
-}
+import { getInsights } from '@/lib/data'
 
 export default async function InsightsPage() {
-  const insights = await getData()
+  const insights = await getInsights()
 
   const hasContent =
     insights.anomalies?.length > 0 ||

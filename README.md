@@ -29,6 +29,12 @@ node -e "require('bcryptjs').hash('your-password-here', 12).then(console.log)"
 
 Copy the output — this is your `PASSWORD_HASH`.
 
+> **Important:** Bcrypt hashes contain `$` signs which `.env` files treat as variable expansions. Always wrap the value in **single quotes** in `.env.local`:
+> ```
+> PASSWORD_HASH='$2b$12$...'
+> ```
+> On Vercel, paste the raw hash value directly — Vercel's UI handles it correctly without quotes.
+
 ### 3. Set environment variables in Vercel
 
 In your Vercel project dashboard → Settings → Environment Variables, add:
