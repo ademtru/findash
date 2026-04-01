@@ -1,37 +1,48 @@
 import { StatCard } from '@/components/dashboard/StatCard'
 import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
+import { MonthSelector } from '@/components/dashboard/MonthSelector'
 import {
-  getTotalIncome,
-  getTotalExpenses,
-  getNetWorth,
-  getSavingsRate,
-  groupByCategory,
-  groupByMonth,
+  getTotalIncome, getTotalExpenses, getNetWorth,
+  getSavingsRate, groupByCategory, groupByMonth, filterByMonth,
 } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
 import { getTransactions } from '@/lib/data'
 
-export default async function OverviewPage() {
+export default async function OverviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string }>
+}) {
+  const { month } = await searchParams
   const { transactions } = await getTransactions()
 
-  const income = getTotalIncome(transactions)
-  const expenses = getTotalExpenses(transactions)
-  const netWorth = getNetWorth(transactions)
-  const savingsRate = getSavingsRate(transactions)
+  const months = Array.from(
+    new Set(transactions.map(t => t.date.slice(0, 7)))
+  ).sort((a, b) => b.localeCompare(a))
 
-  const byMonth = groupByMonth(transactions)
+  const filtered = filterByMonth(transactions, month)
+
+  const income = getTotalIncome(filtered)
+  const expenses = getTotalExpenses(filtered)
+  const savingsRate = getSavingsRate(filtered)
+
+  const primaryValue = month
+    ? `$${(income - expenses).toLocaleString()}`
+    : `$${getNetWorth(transactions).toLocaleString()}`
+  const primaryTitle = month ? 'Net Cash Flow' : 'Net Worth'
+
+  const byMonth = groupByMonth(filtered)
   const cashFlowData = Object.entries(byMonth)
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-6)
-    .map(([month, txns]) => ({
-      month: format(parseISO(`${month}-01`), 'MMM yy'),
+    .map(([m, txns]) => ({
+      month: format(parseISO(`${m}-01`), 'MMM yy'),
       income: getTotalIncome(txns),
       expenses: getTotalExpenses(txns),
     }))
 
-  const expensesByCategory = groupByCategory(transactions.filter(t => t.type === 'expense'))
-  const categoryData = Object.entries(expensesByCategory)
+  const categoryData = Object.entries(groupByCategory(filtered.filter(t => t.type === 'expense')))
     .map(([category, amount]) => ({ category, amount }))
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 6)
@@ -42,8 +53,9 @@ export default async function OverviewPage() {
         <h1 className="text-2xl font-bold tracking-tight text-white">Overview</h1>
         <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Financial snapshot</p>
       </div>
+      <MonthSelector months={months} />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        <StatCard title="Net Worth" value={`$${netWorth.toLocaleString()}`} accent="cyan" />
+        <StatCard title={primaryTitle} value={primaryValue} accent="cyan" />
         <StatCard title="Total Income" value={`$${income.toLocaleString()}`} trend="up" accent="emerald" />
         <StatCard title="Total Expenses" value={`$${expenses.toLocaleString()}`} trend="down" />
         <StatCard title="Savings Rate" value={`${(savingsRate * 100).toFixed(1)}%`} trend={savingsRate > 0.2 ? 'up' : 'neutral'} accent="violet" />
