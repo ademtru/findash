@@ -53,7 +53,7 @@ export function SpendingDonut({ data, month }: SpendingDonutProps) {
               outerRadius={80}
               paddingAngle={3}
               strokeWidth={0}
-              onClick={(entry) => handleCategoryClick(entry.category)}
+              onClick={(entry) => handleCategoryClick((entry as unknown as CategoryData).category)}
               style={{ cursor: 'pointer' }}
             >
               {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
