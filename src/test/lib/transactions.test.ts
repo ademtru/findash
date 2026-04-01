@@ -9,6 +9,8 @@ import {
   getNetWorth,
   filterByMonth,
   getAvailableMonths,
+  filterByCategory,
+  filterByType,
 } from '@/lib/transactions'
 import type { Transaction } from '@/types/transaction'
 
@@ -84,5 +86,33 @@ describe('transactions utils', () => {
   it('getAvailableMonths deduplicates months', () => {
     const months = getAvailableMonths(sample)
     expect(months.length).toBe(new Set(months).size)
+  })
+
+  it('filterByCategory returns all when no category given', () => {
+    expect(filterByCategory(sample, undefined)).toHaveLength(5)
+  })
+
+  it('filterByCategory returns only matching category', () => {
+    const result = filterByCategory(sample, 'Salary')
+    expect(result).toHaveLength(2)
+    expect(result.every(t => t.category === 'Salary')).toBe(true)
+  })
+
+  it('filterByCategory returns empty for unknown category', () => {
+    expect(filterByCategory(sample, 'Unknown')).toHaveLength(0)
+  })
+
+  it('filterByType returns all when no type given', () => {
+    expect(filterByType(sample, undefined)).toHaveLength(5)
+  })
+
+  it('filterByType returns all when type is "all"', () => {
+    expect(filterByType(sample, 'all')).toHaveLength(5)
+  })
+
+  it('filterByType returns only matching type', () => {
+    const result = filterByType(sample, 'income')
+    expect(result).toHaveLength(2)
+    expect(result.every(t => t.type === 'income')).toBe(true)
   })
 })

@@ -57,6 +57,16 @@ export function filterByMonth(transactions: Transaction[], month?: string): Tran
   return transactions.filter(t => t.date.startsWith(month))
 }
 
+export function filterByCategory(transactions: Transaction[], category?: string): Transaction[] {
+  if (!category) return transactions
+  return transactions.filter(t => t.category === category)
+}
+
+export function filterByType(transactions: Transaction[], type?: string): Transaction[] {
+  if (!type || type === 'all') return transactions
+  return transactions.filter(t => t.type === type)
+}
+
 export function getInvestmentHoldings(transactions: Transaction[]) {
   const investments = transactions.filter(t => t.type === 'investment' && t.ticker)
   const holdings: Record<string, { shares: number; cost: number; ticker: string }> = {}
