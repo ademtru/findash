@@ -8,6 +8,7 @@ import {
   groupByMonth,
   getNetWorth,
   filterByMonth,
+  getAvailableMonths,
 } from '@/lib/transactions'
 import type { Transaction } from '@/types/transaction'
 
@@ -68,5 +69,20 @@ describe('transactions utils', () => {
 
   it('filterByMonth returns all transactions for malformed month', () => {
     expect(filterByMonth(sample, '2025-0')).toHaveLength(5)
+  })
+
+  it('filterByMonth returns all transactions for over-length input', () => {
+    // length !== 7 guard treats full date strings as malformed, returns all
+    expect(filterByMonth(sample, '2025-03-01')).toHaveLength(5)
+  })
+
+  it('getAvailableMonths returns sorted unique months newest first', () => {
+    const months = getAvailableMonths(sample)
+    expect(months).toEqual(['2025-03', '2025-02'])
+  })
+
+  it('getAvailableMonths deduplicates months', () => {
+    const months = getAvailableMonths(sample)
+    expect(months.length).toBe(new Set(months).size)
   })
 })

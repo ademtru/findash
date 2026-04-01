@@ -1,6 +1,6 @@
 import { TransactionsTable } from '@/components/dashboard/TransactionsTable'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
-import { filterByMonth, getTotalIncome, getTotalExpenses } from '@/lib/transactions'
+import { filterByMonth, getTotalIncome, getTotalExpenses, getAvailableMonths } from '@/lib/transactions'
 import { getTransactions } from '@/lib/data'
 
 export default async function TransactionsPage({
@@ -11,9 +11,7 @@ export default async function TransactionsPage({
   const { month } = await searchParams
   const { transactions } = await getTransactions()
 
-  const months = Array.from(
-    new Set(transactions.map(t => t.date.slice(0, 7)))
-  ).sort((a, b) => b.localeCompare(a))
+  const months = getAvailableMonths(transactions)
 
   const filtered = filterByMonth(transactions, month)
   const income = getTotalIncome(filtered)

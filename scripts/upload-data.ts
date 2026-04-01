@@ -56,6 +56,7 @@ async function main() {
     contentType: 'application/json',
     token,
     addRandomSuffix: false, // keep filename stable so URL doesn't change
+    allowOverwrite: true,   // overwrite existing blob with same name
   })
 
   const envKey = name === 'transactions.json' ? 'BLOB_URL_TRANSACTIONS' : 'BLOB_URL_INSIGHTS'

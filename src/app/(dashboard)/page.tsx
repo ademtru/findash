@@ -4,7 +4,7 @@ import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
 import {
   getTotalIncome, getTotalExpenses, getNetWorth,
-  getSavingsRate, groupByCategory, groupByMonth, filterByMonth,
+  getSavingsRate, groupByCategory, groupByMonth, filterByMonth, getAvailableMonths,
 } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
 import { getTransactions } from '@/lib/data'
@@ -17,10 +17,7 @@ export default async function OverviewPage({
   const { month } = await searchParams
   const { transactions } = await getTransactions()
 
-  const months = Array.from(
-    new Set(transactions.map(t => t.date.slice(0, 7)))
-  ).sort((a, b) => b.localeCompare(a))
-
+  const months = getAvailableMonths(transactions)
   const filtered = filterByMonth(transactions, month)
 
   const income = getTotalIncome(filtered)
@@ -32,8 +29,8 @@ export default async function OverviewPage({
     : `$${getNetWorth(transactions).toLocaleString()}`
   const primaryTitle = month ? 'Net Cash Flow' : 'Net Worth'
 
-  const byMonth = groupByMonth(filtered)
-  const cashFlowData = Object.entries(byMonth)
+  // Only show the 6-month cash flow chart in all-time view — single bar is meaningless
+  const cashFlowData = month ? [] : Object.entries(groupByMonth(transactions))
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-6)
     .map(([m, txns]) => ({
@@ -60,8 +57,8 @@ export default async function OverviewPage({
         <StatCard title="Total Expenses" value={`$${expenses.toLocaleString()}`} trend="down" />
         <StatCard title="Savings Rate" value={`${(savingsRate * 100).toFixed(1)}%`} trend={savingsRate > 0.2 ? 'up' : 'neutral'} accent="violet" />
       </div>
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-        <CashFlowChart data={cashFlowData} />
+      <div className={month ? 'grid grid-cols-1' : 'grid md:grid-cols-2 gap-4 md:gap-6'}>
+        {!month && <CashFlowChart data={cashFlowData} />}
         <SpendingDonut data={categoryData} />
       </div>
     </div>

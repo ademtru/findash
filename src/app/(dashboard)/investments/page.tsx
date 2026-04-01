@@ -2,7 +2,7 @@ import { HoldingsTable } from '@/components/dashboard/HoldingsTable'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
-import { getInvestmentHoldings, filterByMonth } from '@/lib/transactions'
+import { getInvestmentHoldings, filterByMonth, getAvailableMonths } from '@/lib/transactions'
 import { getTransactions } from '@/lib/data'
 
 export default async function InvestmentsPage({
@@ -13,9 +13,7 @@ export default async function InvestmentsPage({
   const { month } = await searchParams
   const { transactions } = await getTransactions()
 
-  const months = Array.from(
-    new Set(transactions.map(t => t.date.slice(0, 7)))
-  ).sort((a, b) => b.localeCompare(a))
+  const months = getAvailableMonths(transactions)
 
   // Holdings are always all-time (cumulative cost basis)
   const holdings = getInvestmentHoldings(transactions)

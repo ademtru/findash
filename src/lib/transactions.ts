@@ -47,6 +47,11 @@ export function getNetWorth(transactions: Transaction[]): number {
   return transactions.reduce((sum, t) => sum + t.amount, 0)
 }
 
+export function getAvailableMonths(transactions: Transaction[]): string[] {
+  return Array.from(new Set(transactions.map(t => t.date.slice(0, 7))))
+    .sort((a, b) => b.localeCompare(a))
+}
+
 export function filterByMonth(transactions: Transaction[], month?: string): Transaction[] {
   if (!month || month.length !== 7) return transactions
   return transactions.filter(t => t.date.startsWith(month))

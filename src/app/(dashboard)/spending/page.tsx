@@ -2,7 +2,7 @@ import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { SpendingTrends } from '@/components/dashboard/SpendingTrends'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
-import { groupByCategory, groupByMonth, getTotalExpenses, filterByMonth } from '@/lib/transactions'
+import { groupByCategory, groupByMonth, getTotalExpenses, filterByMonth, getAvailableMonths } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
 import { getTransactions } from '@/lib/data'
 
@@ -14,10 +14,7 @@ export default async function SpendingPage({
   const { month } = await searchParams
   const { transactions } = await getTransactions()
 
-  const months = Array.from(
-    new Set(transactions.map(t => t.date.slice(0, 7)))
-  ).sort((a, b) => b.localeCompare(a))
-
+  const months = getAvailableMonths(transactions)
   const filtered = filterByMonth(transactions, month)
   const expenses = filtered.filter(t => t.type === 'expense')
 
@@ -28,8 +25,9 @@ export default async function SpendingPage({
 
   const topCategories = categoryData.slice(0, 5).map(c => c.category)
 
-  const byMonth = groupByMonth(expenses)
-  const trendData = Object.entries(byMonth)
+  // Trend chart needs multiple months — only show in all-time view
+  const allExpenses = transactions.filter(t => t.type === 'expense')
+  const trendData = month ? [] : Object.entries(groupByMonth(allExpenses))
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-6)
     .map(([m, txns]) => {
@@ -42,7 +40,7 @@ export default async function SpendingPage({
 
   const totalSpend = getTotalExpenses(expenses)
   const allExpenseMonthCount = Math.max(
-    Object.keys(groupByMonth(transactions.filter(t => t.type === 'expense'))).length,
+    Object.keys(groupByMonth(allExpenses)).length,
     1
   )
 
@@ -60,9 +58,9 @@ export default async function SpendingPage({
           <StatCard title="Avg / Month" value={`$${(totalSpend / allExpenseMonthCount).toFixed(0)}`} />
         )}
       </div>
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+      <div className={month ? 'grid grid-cols-1' : 'grid md:grid-cols-2 gap-4 md:gap-6'}>
         <SpendingDonut data={categoryData.slice(0, 6)} />
-        <SpendingTrends data={trendData} categories={topCategories} />
+        {!month && <SpendingTrends data={trendData} categories={topCategories} />}
       </div>
       <div className="glass rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
@@ -85,6 +83,9 @@ export default async function SpendingPage({
             ))}
           </tbody>
         </table>
+        {categoryData.length === 0 && (
+          <div className="text-center py-12 text-slate-600 text-sm">No expense data</div>
+        )}
       </div>
     </div>
   )

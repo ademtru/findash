@@ -10,7 +10,7 @@ interface MonthSelectorProps {
 export function MonthSelector({ months }: MonthSelectorProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const selectedMonth = searchParams.get('month') ?? undefined
+  const selectedMonth = searchParams.get('month') || undefined
 
   const currentIdx = selectedMonth ? months.indexOf(selectedMonth) : -1
 
@@ -53,7 +53,7 @@ export function MonthSelector({ months }: MonthSelectorProps) {
         </p>
 
         <button
-          onClick={() => canGoNewer ? navigate(months[currentIdx - 1]) : undefined}
+          onClick={() => { if (canGoNewer) navigate(months[currentIdx - 1]) }}
           disabled={!canGoNewer}
           className="p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors disabled:opacity-25 cursor-pointer disabled:cursor-default"
         >
