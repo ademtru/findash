@@ -1,3 +1,4 @@
+import { RefreshButton } from '@/components/dashboard/RefreshButton'
 import { HoldingsTable } from '@/components/dashboard/HoldingsTable'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { StatCard } from '@/components/dashboard/StatCard'
@@ -30,9 +31,12 @@ export default async function InvestmentsPage({
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Investments</h1>
-        <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Portfolio holdings and allocation</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Investments</h1>
+          <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Portfolio holdings and allocation</p>
+        </div>
+        <RefreshButton />
       </div>
       <MonthSelector months={months} />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
