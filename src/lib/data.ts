@@ -1,25 +1,26 @@
+import { head } from '@vercel/blob'
 import type { TransactionData, InsightsData } from '@/types/transaction'
 
-export async function getTransactions(): Promise<TransactionData> {
+async function fetchPrivateBlob<T>(url: string, fallback: T): Promise<T> {
   try {
-    const url = process.env.BLOB_URL_TRANSACTIONS
-    if (!url) return { transactions: [] }
-    const res = await fetch(url, { cache: 'no-store' })
-    if (!res.ok) return { transactions: [] }
+    const token = process.env.BLOB_READ_WRITE_TOKEN
+    const { downloadUrl } = await head(url, { token })
+    const res = await fetch(downloadUrl, { cache: 'no-store' })
+    if (!res.ok) return fallback
     return res.json()
   } catch {
-    return { transactions: [] }
+    return fallback
   }
 }
 
+export async function getTransactions(): Promise<TransactionData> {
+  const url = process.env.BLOB_URL_TRANSACTIONS
+  if (!url) return { transactions: [] }
+  return fetchPrivateBlob(url, { transactions: [] })
+}
+
 export async function getInsights(): Promise<InsightsData> {
-  try {
-    const url = process.env.BLOB_URL_INSIGHTS
-    if (!url) return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
-    const res = await fetch(url, { cache: 'no-store' })
-    if (!res.ok) return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
-    return res.json()
-  } catch {
-    return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
-  }
+  const url = process.env.BLOB_URL_INSIGHTS
+  if (!url) return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
+  return fetchPrivateBlob(url, { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] })
 }

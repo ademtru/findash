@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+// Load .env.local manually (tsx doesn't load it automatically)
+import { readFileSync as _readEnv } from 'fs'
+import { resolve as _resolve } from 'path'
+try {
+  _readEnv(_resolve(process.cwd(), '.env.local'), 'utf-8')
+    .split('\n')
+    .forEach(line => {
+      const m = line.match(/^([^#=]+)=(.*)$/)
+      if (m && !process.env[m[1].trim()]) process.env[m[1].trim()] = m[2].trim().replace(/^['"]|['"]$/g, '')
+    })
+} catch { /* no .env.local */ }
+
 /**
  * Uploads transactions.json or insights.json to Vercel Blob.
  *
@@ -40,7 +52,7 @@ async function main() {
   console.log(`Uploading ${name}...`)
 
   const blob = await put(name, content, {
-    access: 'public',
+    access: 'private',
     contentType: 'application/json',
     token,
     addRandomSuffix: false, // keep filename stable so URL doesn't change
@@ -49,7 +61,7 @@ async function main() {
   const envKey = name === 'transactions.json' ? 'BLOB_URL_TRANSACTIONS' : 'BLOB_URL_INSIGHTS'
   console.log(`\nUploaded successfully!`)
   console.log(`URL: ${blob.url}`)
-  console.log(`\nSet this in your Vercel environment variables:`)
+  console.log(`\nSet this in your Vercel environment variables (and .env.local):`)
   console.log(`${envKey}=${blob.url}`)
 }
 
