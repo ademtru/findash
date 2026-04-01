@@ -7,6 +7,7 @@ import {
   groupByCategory,
   groupByMonth,
   getNetWorth,
+  filterByMonth,
 } from '@/lib/transactions'
 import type { Transaction } from '@/types/transaction'
 
@@ -49,5 +50,23 @@ describe('transactions utils', () => {
 
   it('calculates net worth from all transactions', () => {
     expect(getNetWorth(sample)).toBe(8800)
+  })
+
+  it('filterByMonth returns all when no month given', () => {
+    expect(filterByMonth(sample, undefined)).toHaveLength(5)
+  })
+
+  it('filterByMonth returns only matching month', () => {
+    const result = filterByMonth(sample, '2025-03')
+    expect(result).toHaveLength(3)
+    expect(result.every(t => t.date.startsWith('2025-03'))).toBe(true)
+  })
+
+  it('filterByMonth returns empty for unknown month', () => {
+    expect(filterByMonth(sample, '2024-01')).toHaveLength(0)
+  })
+
+  it('filterByMonth returns all transactions for malformed month', () => {
+    expect(filterByMonth(sample, '2025-0')).toHaveLength(5)
   })
 })

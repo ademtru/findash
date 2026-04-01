@@ -47,6 +47,11 @@ export function getNetWorth(transactions: Transaction[]): number {
   return transactions.reduce((sum, t) => sum + t.amount, 0)
 }
 
+export function filterByMonth(transactions: Transaction[], month?: string): Transaction[] {
+  if (!month || month.length !== 7) return transactions
+  return transactions.filter(t => t.date.startsWith(month))
+}
+
 export function getInvestmentHoldings(transactions: Transaction[]) {
   const investments = transactions.filter(t => t.type === 'investment' && t.ticker)
   const holdings: Record<string, { shares: number; cost: number; ticker: string }> = {}
