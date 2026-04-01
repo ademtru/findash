@@ -1,4 +1,3 @@
-import { head } from '@vercel/blob'
 import { unstable_noStore as noStore } from 'next/cache'
 import type { TransactionData, InsightsData } from '@/types/transaction'
 
@@ -6,8 +5,10 @@ async function fetchPrivateBlob<T>(url: string, fallback: T): Promise<T> {
   noStore()
   try {
     const token = process.env.BLOB_READ_WRITE_TOKEN
-    const { downloadUrl } = await head(url, { token })
-    const res = await fetch(downloadUrl, { cache: 'no-store' })
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    })
     if (!res.ok) return fallback
     return res.json()
   } catch {
