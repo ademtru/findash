@@ -1,5 +1,6 @@
 'use client'
 import { useState, useMemo } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { Search } from 'lucide-react'
 import type { Transaction } from '@/types/transaction'
@@ -13,16 +14,30 @@ const TYPE_CONFIG: Record<string, { color: string; bg: string }> = {
 
 const TYPES = ['all', 'income', 'expense', 'investment', 'transfer']
 
-export function TransactionsTable({ transactions }: { transactions: Transaction[] }) {
+interface TransactionsTableProps {
+  transactions: Transaction[]
+  selectedType?: string
+}
+
+export function TransactionsTable({ transactions, selectedType }: TransactionsTableProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [search, setSearch] = useState('')
-  const [typeFilter, setTypeFilter] = useState('all')
+
+  function setType(type: string | null) {
+    const params = new URLSearchParams(searchParams.toString())
+    if (type && type !== 'all') params.set('type', type)
+    else params.delete('type')
+    router.push(`?${params.toString()}`)
+  }
 
   const filtered = useMemo(() => transactions
-    .filter(t => typeFilter === 'all' || t.type === typeFilter)
     .filter(t => !search || t.description.toLowerCase().includes(search.toLowerCase()) || t.category.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => b.date.localeCompare(a.date)),
-    [transactions, search, typeFilter]
+    [transactions, search]
   )
+
+  const activeType = selectedType || 'all'
 
   return (
     <div className="space-y-4">
@@ -39,9 +54,9 @@ export function TransactionsTable({ transactions }: { transactions: Transaction[
         </div>
         <div className="flex gap-2 flex-wrap">
           {TYPES.map(type => (
-            <button key={type} onClick={() => setTypeFilter(type)}
+            <button key={type} onClick={() => setType(type)}
               className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 capitalize cursor-pointer ${
-                typeFilter === type
+                activeType === type
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/25'
                   : 'text-slate-500 hover:text-slate-300 border border-transparent hover:border-white/10'
               }`}>
