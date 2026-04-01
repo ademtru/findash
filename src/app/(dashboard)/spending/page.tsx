@@ -1,13 +1,25 @@
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { SpendingTrends } from '@/components/dashboard/SpendingTrends'
 import { StatCard } from '@/components/dashboard/StatCard'
-import { groupByCategory, groupByMonth, getTotalExpenses } from '@/lib/transactions'
+import { MonthSelector } from '@/components/dashboard/MonthSelector'
+import { groupByCategory, groupByMonth, getTotalExpenses, filterByMonth } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
 import { getTransactions } from '@/lib/data'
 
-export default async function SpendingPage() {
+export default async function SpendingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string }>
+}) {
+  const { month } = await searchParams
   const { transactions } = await getTransactions()
-  const expenses = transactions.filter(t => t.type === 'expense')
+
+  const months = Array.from(
+    new Set(transactions.map(t => t.date.slice(0, 7)))
+  ).sort((a, b) => b.localeCompare(a))
+
+  const filtered = filterByMonth(transactions, month)
+  const expenses = filtered.filter(t => t.type === 'expense')
 
   const byCategory = groupByCategory(expenses)
   const categoryData = Object.entries(byCategory)
@@ -20,16 +32,19 @@ export default async function SpendingPage() {
   const trendData = Object.entries(byMonth)
     .sort(([a], [b]) => a.localeCompare(b))
     .slice(-6)
-    .map(([month, txns]) => {
+    .map(([m, txns]) => {
       const byCat = groupByCategory(txns)
       return {
-        month: format(parseISO(`${month}-01`), 'MMM yy'),
+        month: format(parseISO(`${m}-01`), 'MMM yy'),
         ...Object.fromEntries(topCategories.map(cat => [cat, byCat[cat] ?? 0])),
       }
     })
 
   const totalSpend = getTotalExpenses(expenses)
-  const monthCount = Math.max(Object.keys(byMonth).length, 1)
+  const allExpenseMonthCount = Math.max(
+    Object.keys(groupByMonth(transactions.filter(t => t.type === 'expense'))).length,
+    1
+  )
 
   return (
     <div className="p-4 md:p-6 space-y-6">
@@ -37,10 +52,13 @@ export default async function SpendingPage() {
         <h1 className="text-2xl font-bold tracking-tight text-white">Spending</h1>
         <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Breakdown by category and time</p>
       </div>
+      <MonthSelector months={months} />
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <StatCard title="Total Spent" value={`$${totalSpend.toLocaleString()}`} trend="down" />
         <StatCard title="Top Category" value={categoryData[0]?.category ?? '—'} />
-        <StatCard title="Avg / Month" value={`$${(totalSpend / monthCount).toFixed(0)}`} />
+        {!month && (
+          <StatCard title="Avg / Month" value={`$${(totalSpend / allExpenseMonthCount).toFixed(0)}`} />
+        )}
       </div>
       <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         <SpendingDonut data={categoryData.slice(0, 6)} />
