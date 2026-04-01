@@ -1,7 +1,7 @@
 'use client'
 import { useState, useMemo } from 'react'
 import { format, parseISO } from 'date-fns'
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search } from 'lucide-react'
 import type { Transaction } from '@/types/transaction'
 
 const TYPE_CONFIG: Record<string, { color: string; bg: string }> = {
@@ -17,64 +17,15 @@ export function TransactionsTable({ transactions }: { transactions: Transaction[
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
 
-  // Derive sorted month list from all transactions
-  const months = useMemo(() => {
-    const set = new Set(transactions.map(t => t.date.slice(0, 7)))
-    return Array.from(set).sort((a, b) => b.localeCompare(a)) // newest first
-  }, [transactions])
-
-  const [monthIdx, setMonthIdx] = useState(0) // 0 = most recent month
-  const selectedMonth = months[monthIdx] ?? null
-
   const filtered = useMemo(() => transactions
-    .filter(t => !selectedMonth || t.date.startsWith(selectedMonth))
     .filter(t => typeFilter === 'all' || t.type === typeFilter)
     .filter(t => !search || t.description.toLowerCase().includes(search.toLowerCase()) || t.category.toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => b.date.localeCompare(a.date)),
-    [transactions, selectedMonth, search, typeFilter]
+    [transactions, search, typeFilter]
   )
-
-  // Month summary stats
-  const monthIncome = useMemo(() => filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0), [filtered])
-  const monthExpenses = useMemo(() => filtered.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0), [filtered])
 
   return (
     <div className="space-y-4">
-      {/* Month navigator */}
-      {selectedMonth && (
-        <div className="flex items-center justify-between glass rounded-2xl px-5 py-4">
-          <button
-            onClick={() => setMonthIdx(i => Math.min(i + 1, months.length - 1))}
-            disabled={monthIdx >= months.length - 1}
-            className="p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors disabled:opacity-25 cursor-pointer disabled:cursor-default"
-          >
-            <ChevronLeft className="h-4 w-4 text-slate-400" />
-          </button>
-
-          <div className="text-center">
-            <p className="text-base font-semibold text-white">
-              {format(parseISO(`${selectedMonth}-01`), 'MMMM yyyy')}
-            </p>
-            <p className="text-[11px] text-slate-500 mt-0.5">
-              <span className="text-emerald-400">+${monthIncome.toLocaleString()}</span>
-              <span className="mx-2 text-slate-600">·</span>
-              <span className="text-red-400">-${monthExpenses.toLocaleString()}</span>
-              <span className="mx-2 text-slate-600">·</span>
-              <span>{filtered.length} txns</span>
-            </p>
-          </div>
-
-          <button
-            onClick={() => setMonthIdx(i => Math.max(i - 1, 0))}
-            disabled={monthIdx <= 0}
-            className="p-1.5 rounded-lg hover:bg-white/[0.06] transition-colors disabled:opacity-25 cursor-pointer disabled:cursor-default"
-          >
-            <ChevronRight className="h-4 w-4 text-slate-400" />
-          </button>
-        </div>
-      )}
-
-      {/* Search + type filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative sm:max-w-xs w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
@@ -100,7 +51,6 @@ export function TransactionsTable({ transactions }: { transactions: Transaction[
         </div>
       </div>
 
-      {/* Desktop table */}
       <div className="hidden md:block glass rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -136,7 +86,6 @@ export function TransactionsTable({ transactions }: { transactions: Transaction[
         )}
       </div>
 
-      {/* Mobile cards */}
       <div className="md:hidden space-y-2">
         {filtered.map(t => (
           <div key={t.id} className="glass rounded-xl px-4 py-3.5 flex justify-between items-center gap-3">
