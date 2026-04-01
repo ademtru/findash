@@ -104,7 +104,7 @@ export function MonthSelector({ months }: MonthSelectorProps) {
       </div>
 
       {open && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50 glass rounded-2xl p-4 border border-white/10 shadow-2xl min-w-[340px]">
+        <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 z-50 rounded-2xl p-4 border border-white/10 shadow-2xl min-w-[340px]" style={{ background: 'rgb(10, 14, 23)' }}>
           {years.map(year => (
             <div key={year} className="mb-3 last:mb-0">
               <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-2">{year}</p>

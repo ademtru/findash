@@ -8,9 +8,9 @@ export interface Transaction {
   category: string
   description: string
   account: string
-  ticker?: string
-  shares?: number
-  price_per_share?: number
+  ticker?: string | null
+  shares?: number | null
+  price_per_share?: number | null
 }
 
 export interface TransactionData {

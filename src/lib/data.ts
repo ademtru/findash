@@ -19,7 +19,11 @@ async function fetchPrivateBlob<T>(url: string, fallback: T): Promise<T> {
 export async function getTransactions(): Promise<TransactionData> {
   const url = process.env.BLOB_URL_TRANSACTIONS
   if (!url) return { transactions: [] }
-  return fetchPrivateBlob(url, { transactions: [] })
+  const raw = await fetchPrivateBlob<unknown>(url, { transactions: [] })
+  // Support both { transactions: [...] } and a bare array [...]
+  if (Array.isArray(raw)) return { transactions: raw }
+  const data = raw as { transactions?: unknown }
+  return { transactions: Array.isArray(data.transactions) ? data.transactions : [] }
 }
 
 export async function getInsights(): Promise<InsightsData> {
