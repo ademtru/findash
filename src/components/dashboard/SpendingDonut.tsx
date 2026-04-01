@@ -1,11 +1,17 @@
 'use client'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
+import { useRouter } from 'next/navigation'
 
 const COLORS = ['#06B6D4', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899']
 
 interface CategoryData {
   category: string
   amount: number
+}
+
+interface SpendingDonutProps {
+  data: CategoryData[]
+  month?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -15,12 +21,21 @@ const CustomTooltip = ({ active, payload }: any) => {
     <div className="glass rounded-xl p-3 text-xs border border-white/10">
       <p className="text-white font-semibold">{payload[0].name}</p>
       <p className="text-cyan-400">${payload[0].value.toFixed(2)}</p>
+      <p className="text-slate-500 mt-1">Click to drill down →</p>
     </div>
   )
 }
 
-export function SpendingDonut({ data }: { data: CategoryData[] }) {
+export function SpendingDonut({ data, month }: SpendingDonutProps) {
+  const router = useRouter()
   const total = data.reduce((s, d) => s + d.amount, 0)
+
+  function handleCategoryClick(category: string) {
+    const params = new URLSearchParams()
+    if (month) params.set('month', month)
+    params.set('category', category)
+    router.push(`/transactions?${params.toString()}`)
+  }
 
   return (
     <div className="glass rounded-2xl p-5">
@@ -28,7 +43,19 @@ export function SpendingDonut({ data }: { data: CategoryData[] }) {
       <div className="relative">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
-            <Pie data={data} dataKey="amount" nameKey="category" cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={3} strokeWidth={0}>
+            <Pie
+              data={data}
+              dataKey="amount"
+              nameKey="category"
+              cx="50%"
+              cy="50%"
+              innerRadius={55}
+              outerRadius={80}
+              paddingAngle={3}
+              strokeWidth={0}
+              onClick={(entry) => handleCategoryClick(entry.category)}
+              style={{ cursor: 'pointer' }}
+            >
               {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
@@ -43,10 +70,14 @@ export function SpendingDonut({ data }: { data: CategoryData[] }) {
       {/* Legend */}
       <div className="grid grid-cols-2 gap-1.5 mt-4">
         {data.slice(0, 6).map((d, i) => (
-          <div key={d.category} className="flex items-center gap-2">
+          <button
+            key={d.category}
+            onClick={() => handleCategoryClick(d.category)}
+            className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
-            <span className="text-[11px] text-slate-400 truncate">{d.category}</span>
-          </div>
+            <span className="text-[11px] text-slate-400 truncate hover:text-slate-200 transition-colors">{d.category}</span>
+          </button>
         ))}
       </div>
     </div>
