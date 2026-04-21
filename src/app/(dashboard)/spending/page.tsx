@@ -67,7 +67,8 @@ export default async function SpendingPage({
         <SpendingDonut data={categoryData.slice(0, 6)} month={month} />
         {!month && <SpendingTrends data={trendData} categories={topCategories} />}
       </div>
-      <div className="glass rounded-2xl overflow-hidden">
+      {/* Desktop category table */}
+      <div className="hidden md:block glass rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/[0.05]">
@@ -96,6 +97,26 @@ export default async function SpendingPage({
             })}
           </tbody>
         </table>
+        {categoryData.length === 0 && (
+          <div className="text-center py-12 text-slate-600 text-sm">No expense data</div>
+        )}
+      </div>
+
+      {/* Mobile category cards */}
+      <div className="md:hidden space-y-2">
+        {categoryData.map(({ category, amount }) => {
+          const href = `/transactions?${month ? `month=${month}&` : ''}category=${encodeURIComponent(category)}`
+          const pct = totalSpend > 0 ? ((amount / totalSpend) * 100).toFixed(1) : '0.0'
+          return (
+            <Link key={category} href={href} className="glass rounded-xl px-4 py-3.5 flex justify-between items-center gap-3 hover:border-white/15 transition-colors block">
+              <p className="text-sm font-medium text-slate-200 truncate">{category}</p>
+              <div className="text-right shrink-0">
+                <p className="text-sm font-bold tabular-nums text-white">${amount.toFixed(2)}</p>
+                <p className="text-xs text-slate-500 mt-0.5">{pct}%</p>
+              </div>
+            </Link>
+          )
+        })}
         {categoryData.length === 0 && (
           <div className="text-center py-12 text-slate-600 text-sm">No expense data</div>
         )}

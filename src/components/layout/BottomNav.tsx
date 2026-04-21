@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles, CloudUpload } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: '/spending', label: 'Spend', icon: PieChart },
   { href: '/investments', label: 'Invest', icon: TrendingUp },
   { href: '/insights', label: 'AI', icon: Sparkles },
+  { href: '/upload', label: 'Upload', icon: CloudUpload },
 ]
 
 export function BottomNav() {

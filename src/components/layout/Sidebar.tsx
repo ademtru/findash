@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles, LogOut, Zap } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles, LogOut, Zap, CloudUpload } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
@@ -10,6 +10,10 @@ const NAV_ITEMS = [
   { href: '/spending', label: 'Spending', icon: PieChart },
   { href: '/investments', label: 'Investments', icon: TrendingUp },
   { href: '/insights', label: 'AI Insights', icon: Sparkles },
+]
+
+const UTILITY_ITEMS = [
+  { href: '/upload', label: 'Upload Data', icon: CloudUpload },
 ]
 
 export function Sidebar() {
@@ -62,6 +66,32 @@ export function Sidebar() {
 
       {/* Divider */}
       <div className="h-px bg-white/[0.06] my-4" />
+
+      {/* Utility links */}
+      <div className="space-y-1 mb-2">
+        {UTILITY_ITEMS.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
+                active
+                  ? 'nav-active'
+                  : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+              )}
+            >
+              <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-cyan-400' : '')} />
+              {label}
+              {active && <span className="ml-auto w-1 h-1 rounded-full bg-cyan-400" />}
+            </Link>
+          )
+        })}
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-white/[0.06] mb-4" />
 
       {/* Logout */}
       <button
