@@ -1,15 +1,15 @@
 ---
 name: update-finances
-description: Process bank statements, receipts, and screenshots to extract transactions, merge with existing data, generate AI insights, and upload everything to Vercel Blob.
+description: Process bank statements, receipts, and screenshots to extract transactions, merge with existing data, generate AI insights, and upload everything via the Findash web API or Vercel Blob.
 ---
 
 # Update Finances
 
-You are updating the Findash financial dashboard with new transaction data.
+You are updating the Findash financial dashboard with new financial data.
 
 ## Overview
 
-This skill processes uploaded financial files (bank statements, CSVs, screenshots, PDFs), extracts transactions, merges them with existing data, generates AI insights (building on previous insights), and uploads both JSON files to Vercel Blob.
+This skill processes uploaded financial files (bank statements, CSVs, screenshots, PDFs), extracts transactions, merges with existing data, generates AI insights that build on previous history, and uploads both files.
 
 **Announce at start:** "Using update-finances skill to process your financial files."
 
@@ -17,9 +17,9 @@ This skill processes uploaded financial files (bank statements, CSVs, screenshot
 
 ## Step 1: Collect Files to Process
 
-If the user has not provided file paths in their message, ask:
+If the user has not provided file paths, ask:
 
-> "Which files do you want to process? Provide the full paths (or drag files into the terminal). Supported: bank statement CSVs, PDF statements, screenshots of transactions."
+> "Which files do you want to process? Provide full paths or drag files into the terminal. Supported: bank statement CSVs, PDF statements, screenshots of transactions."
 
 Accept any combination of:
 - **CSV/Excel** — bank exports, brokerage exports
@@ -28,250 +28,282 @@ Accept any combination of:
 
 ---
 
-## Step 2: Load Existing Data
-
-Find the project root (the directory containing `package.json`):
+## Step 2: Resolve Project Root and Config
 
 ```bash
 PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
+ENV_FILE="$PROJECT_ROOT/.env.local"
 ```
 
-### Load existing transactions
+Read the env file and extract these values:
 
 ```bash
-grep BLOB_URL_TRANSACTIONS "$PROJECT_ROOT/.env.local" 2>/dev/null
+BLOB_URL_TRANSACTIONS=$(grep -E '^BLOB_URL_TRANSACTIONS=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+BLOB_URL_INSIGHTS=$(grep -E '^BLOB_URL_INSIGHTS=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+APP_URL=$(grep -E '^NEXT_PUBLIC_APP_URL=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+BLOB_TOKEN=$(grep -E '^BLOB_READ_WRITE_TOKEN=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+FINDASH_PASSWORD=$(grep -E '^FINDASH_PASSWORD=' "$ENV_FILE" 2>/dev/null | cut -d'=' -f2- | tr -d '"' | tr -d "'")
 ```
 
-If `BLOB_URL_TRANSACTIONS` is set:
+Determine the upload method:
+- **Web API** (preferred): requires `APP_URL` and `FINDASH_PASSWORD`
+- **Direct blob** (fallback): requires `BLOB_READ_WRITE_TOKEN`
+
+If neither is available, tell the user to add one of the following to `.env.local`:
+```
+# Option A — web API (recommended, works from anywhere)
+NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+FINDASH_PASSWORD=your_dashboard_password
+
+# Option B — direct blob upload (requires token)
+BLOB_READ_WRITE_TOKEN=vercel_blob_...
+```
+
+---
+
+## Step 3: Load Existing Transactions
+
+Fetch the current transaction dataset for full-history analysis:
+
 ```bash
 curl -s "$BLOB_URL_TRANSACTIONS" > /tmp/existing_transactions.json
 ```
 
-If not set or fetch fails, start with `{ "transactions": [] }`.
+If fetch fails or `BLOB_URL_TRANSACTIONS` is not set, start with `{ "transactions": [] }`.
 
-Read and remember the existing transaction IDs to enable deduplication later.
+**Record all existing transaction IDs** — you will use these to skip duplicates in Step 6.
 
-### Load existing insights
+---
 
-```bash
-grep BLOB_URL_INSIGHTS "$PROJECT_ROOT/.env.local" 2>/dev/null
-```
+## Step 4: Load Existing Insights
 
-If `BLOB_URL_INSIGHTS` is set:
+Fetch current insights so you can build on them rather than starting from scratch:
+
 ```bash
 curl -s "$BLOB_URL_INSIGHTS" > /tmp/existing_insights.json
 ```
 
-If not set or fetch fails, start with:
+If fetch fails or `BLOB_URL_INSIGHTS` is not set, start with:
 ```json
 { "generated_at": "", "monthly": [], "anomalies": [], "trends": [], "investments": [] }
 ```
 
-**Read the existing insights carefully** — you will build on them in Step 7, preserving insight history for months not covered by the new data.
+**Read the existing insights carefully.** You will preserve monthly summaries for unchanged months, carry forward investment commentary for untouched tickers, and append only genuinely new anomalies.
 
 ---
 
-## Step 3: Extract Transactions From Each File
+## Step 5: Extract Transactions From Each File
 
-Process each file one at a time. For each file:
+Process each provided file one at a time:
 
-### For CSV files
-Use the Read tool (or Bash `cat`) to read the file contents. Identify the columns. Common bank CSV formats:
+### CSV files
+Read the file. Identify columns. Common formats:
 - Chase: `Transaction Date, Post Date, Description, Category, Type, Amount, Memo`
 - Bank of America: `Date, Description, Amount, Running Bal.`
-- Fidelity/brokerage: `Date, Transaction, Name, Memo/Description, Amount`
-- Generic: look for date, description, amount columns
+- Fidelity: `Date, Transaction, Name, Memo/Description, Amount`
+- Generic: find date + description + amount columns
 
-Parse every row into the transaction schema below.
+### PDF files
+Read the PDF with the Read tool. Extract every transaction row from tables (handle multi-page).
 
-### For PDF files
-Use the Read tool to read the PDF. Extract all transaction rows — look for tables with date, description, and amount columns. Handle multi-page statements.
-
-### For image/screenshot files
-Use the Read tool to view the image visually. Extract every visible transaction from the screen. Be thorough — get all rows, even partially visible ones.
+### Image/screenshot files
+View the image with the Read tool. Extract every visible transaction — be thorough, including partially visible rows.
 
 ---
 
-## Step 4: Transform to Transaction Schema
+## Step 6: Transform and Deduplicate
 
-Every extracted transaction **must** conform to this TypeScript type:
+### Transaction schema
+
+Every extracted transaction must conform to:
 
 ```ts
 interface Transaction {
-  id: string           // deterministic, see ID generation below
-  date: string         // YYYY-MM-DD (convert MM/DD/YYYY, DD/MM/YYYY, etc.)
-  amount: number       // NEGATIVE for outflows (expenses, investments, transfers out)
-                       // POSITIVE for inflows (income, transfers in)
+  id: string           // deterministic — see ID generation below
+  date: string         // YYYY-MM-DD
+  amount: number       // negative = outflow, positive = inflow
   type: 'income' | 'expense' | 'transfer' | 'investment'
-  category: string     // see category guide below
+  category: string
   description: string  // cleaned merchant/payee name
-  account: string      // e.g. "Chase Checking", "Fidelity Brokerage" — infer from source file
-  ticker?: string      // only for investment transactions, e.g. "AAPL"
-  shares?: number      // only for investment transactions
-  price_per_share?: number  // only for investment transactions, if available
+  account: string      // e.g. "Chase Checking" — infer from source file
+  ticker?: string      // investment transactions only
+  shares?: number
+  price_per_share?: number
 }
 ```
 
-### ID Generation
-
-Generate IDs deterministically so re-importing the same file doesn't create duplicates:
+### ID generation (deterministic — prevents re-import duplicates)
 
 ```
 id = "{YYYY-MM-DD}-{abs(amount).toFixed(2)}-{slug(description)}"
 ```
 
-Where `slug(description)` = first 20 chars of description, lowercased, spaces→hyphens, non-alphanumeric→removed.
+`slug` = first 20 chars, lowercased, spaces→hyphens, non-alphanumeric removed.
+Example: `"2025-03-15-200.00-apple-store"`
 
-Example: `"2025-03-15-200.00-apple-store"` or `"2025-03-01-5000.00-payroll-direct-dep"`
+### Amount sign convention
+- **Positive**: money in — salary, refunds, interest, transfers received
+- **Negative**: money out — purchases, bills, investments, transfers sent
 
-### Amount Sign Convention
-
-- **Positive (+)**: money coming in — salary, refunds, interest, dividends, transfers received
-- **Negative (-)**: money going out — purchases, bills, investments, transfers sent
-
-Many bank CSVs use negative for purchases — preserve that. Some use positive for everything and have a separate debit/credit column — apply the sign yourself.
-
-### Type Classification
+### Type classification
 
 | type | When to use |
 |------|-------------|
-| `income` | Salary, freelance pay, tax refund, interest, dividends received |
+| `income` | Salary, freelance, tax refund, interest, dividends |
 | `expense` | Any purchase, bill, subscription, fee |
-| `transfer` | Between your own accounts (checking→savings, etc.) |
+| `transfer` | Between your own accounts |
 | `investment` | Stock/ETF/crypto buy or sell, brokerage contributions |
 
-### Category Guide
-
-Use these categories consistently:
+### Categories
 
 **Expenses:** `Food & Drink`, `Groceries`, `Transport`, `Fuel`, `Utilities`, `Rent/Mortgage`, `Healthcare`, `Insurance`, `Subscriptions`, `Shopping`, `Entertainment`, `Travel`, `Education`, `Personal Care`, `Home`, `Fees & Charges`, `Other`
 
 **Income:** `Salary`, `Freelance`, `Interest`, `Dividends`, `Tax Refund`, `Other Income`
 
-**Investment:** `Investment`
+**Investment / Transfer:** `Investment`, `Transfer`
 
-**Transfer:** `Transfer`
+### Deduplication
 
----
+Filter out any new transaction whose `id` already exists in the existing dataset. Report: "Found X new transactions (Y duplicates skipped)."
 
-## Step 5: Deduplicate and Merge
+### Merge
 
-1. Collect all newly extracted transactions
-2. Filter out any new transaction whose ID already exists in the current data
-3. Append the non-duplicate new transactions to the existing list
-4. Sort the full list by `date` descending (newest first)
-
-Report: "Found X new transactions (Y duplicates skipped)."
+Append the new (non-duplicate) transactions to the existing list and sort by `date` descending.
 
 ---
 
-## Step 6: Write transactions.json
-
-Write the merged data to the project root:
+## Step 7: Write transactions.json
 
 ```json
 {
-  "transactions": [ ...all transactions sorted newest first... ]
+  "transactions": [ ...full merged list, newest first... ]
 }
 ```
 
-File path: `$PROJECT_ROOT/transactions.json`
+File: `$PROJECT_ROOT/transactions.json`
 
-Validate: the JSON is well-formed, all required fields are present, all amounts are numbers (not strings), all dates are YYYY-MM-DD.
+Validate: well-formed JSON, all fields present, amounts are numbers, dates are YYYY-MM-DD.
 
 ---
 
-## Step 7: Generate AI Insights
+## Step 8: Generate AI Insights
 
-Analyze the full transaction dataset and produce insights. **You already have the existing insights from Step 2 — use them as your starting point:**
+Analyze the **complete** merged transaction dataset. Use the existing insights loaded in Step 4 as your baseline — the goal is incremental updates, not a full regeneration.
 
-- **Preserve** monthly summaries for months that have no new or changed transactions
-- **Regenerate** monthly summaries only for months that have new transactions in this update
-- **Add** new anomalies for newly imported data; existing anomalies are already stored
-- **Replace** trends with a fresh analysis of the full dataset (trends are always whole-picture)
-- **Update** investment commentary for tickers that appear in the new transactions; preserve commentary for tickers not in this update
+### Which months to update
 
-### Monthly Insights
+Identify all months (`YYYY-MM`) that contain newly added transactions. These are the **affected months**. All other months are **preserved** (copy their existing insight unchanged).
 
-For each month that has new or changed transactions, generate (or update):
+### Monthly insights (affected months only)
+
+For each affected month, generate:
 ```ts
 {
   month: "YYYY-MM",
-  narrative: "2-3 sentence plain-English summary of that month's finances",
-  savings_rate: 0.0–1.0,  // (income - expenses) / income. Negative if expenses > income.
-  highlights: ["string1", "string2", ...]  // 2-4 notable events or facts for that month
+  narrative: "2-3 sentence summary of that month's finances",
+  savings_rate: (totalIncome - totalExpenses) / totalIncome,  // negative if expenses > income
+  highlights: ["2-4 notable facts or events"]
 }
 ```
 
-Savings rate formula: `(totalIncome - totalExpenses) / totalIncome` where:
-- `totalIncome` = sum of all `income` type transactions (positive)
-- `totalExpenses` = sum of absolute values of all `expense` type transactions
+Where `totalIncome` = sum of positive `income` transactions, `totalExpenses` = sum of absolute values of `expense` transactions.
 
-For months **not** affected by this update, copy the existing monthly insight unchanged.
+For preserved months, copy the existing entry unchanged.
 
-### Anomalies
+### Anomalies (new transactions only)
 
-Flag unusual transactions **in the newly imported data only** (existing anomalies are already stored and will be merged automatically). Consider:
-- Single transaction that is >3x the average for its category
-- Unusually large income spike or drop vs. previous months
-- Duplicate-looking transactions (same amount, same merchant, same week)
-- A month with zero income (likely missing data — flag it)
+Only flag anomalies **in the newly imported transactions**. Existing anomalies are preserved automatically by the upload API.
+
+Consider:
+- A transaction >3× the category average
+- Unusual income spike or drop vs. surrounding months
+- Duplicate-looking transactions (same amount, same merchant, within one week)
+- A month with zero income (possible missing data)
 
 ```ts
 {
   date: "YYYY-MM-DD",
-  description: "Clear explanation of what's unusual and why it matters",
+  description: "What is unusual and why it matters — be specific",
   severity: "low" | "medium" | "high"
 }
 ```
 
-Severity guide: `high` = potential fraud or major financial event, `medium` = unusual but probably fine, `low` = minor observation.
+`high` = potential fraud or major event · `medium` = unusual but likely fine · `low` = minor observation
 
-### Trends
+### Trends (full dataset — always refresh)
 
-Identify 3-6 meaningful trends across the **full** dataset (all transactions, old and new):
+Analyze the complete dataset for 3–6 meaningful patterns:
 ```ts
 {
   type: "short label",
-  description: "1-2 sentence observation with specific numbers",
+  description: "1-2 sentences with specific numbers",
   direction: "positive" | "negative" | "neutral"
 }
 ```
 
-`positive` = good for finances, `negative` = concerning, `neutral` = informational.
+Examples: spending rising MoM in a category, savings rate improving, a recurring charge the user may have forgotten.
 
-### Investment Insights
+### Investment commentary (affected tickers only)
 
-For each unique ticker **in the new transactions**, update its commentary. For tickers not in this update, copy the existing commentary unchanged.
+For each ticker that appears in the **newly added** transactions, write or update commentary. For tickers not in this update, copy existing commentary unchanged.
 
 ```ts
 {
   ticker: "AAPL",
-  commentary: "1-2 sentences about cost basis, frequency of purchases, or pattern observed"
+  commentary: "1-2 sentences on cost basis, purchase frequency, or observed pattern"
 }
 ```
 
 ---
 
-## Step 8: Write insights.json
+## Step 9: Write insights.json
 
-Produce the merged insights file — existing months/tickers not touched by this update are carried forward from the data loaded in Step 2:
+Produce the complete merged insights file:
 
 ```json
 {
-  "generated_at": "ISO 8601 timestamp of now",
-  "monthly": [ ...all months (preserved + updated/new), sorted oldest first... ],
-  "anomalies": [ ...existing anomalies + new ones, sorted by severity desc then date desc... ],
-  "trends": [ ...fresh full-dataset trends, most impactful first... ],
+  "generated_at": "<ISO 8601 timestamp>",
+  "monthly":     [ ...all months (preserved + updated), sorted oldest→newest... ],
+  "anomalies":   [ ...existing + new, sorted severity desc then date desc... ],
+  "trends":      [ ...fresh full-dataset trends, most impactful first... ],
   "investments": [ ...all tickers (preserved + updated), sorted by total cost desc... ]
 }
 ```
 
-File path: `$PROJECT_ROOT/insights.json`
+File: `$PROJECT_ROOT/insights.json`
 
 ---
 
-## Step 9: Upload to Vercel Blob
+## Step 10: Upload Both Files
+
+### Option A — Web API (preferred, works from anywhere, no token needed)
+
+```bash
+# 1. Authenticate — get a session cookie
+curl -s -c /tmp/findash_session.txt \
+  -X POST "$APP_URL/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d "{\"password\": \"$FINDASH_PASSWORD\"}" > /dev/null
+
+# 2. Upload transactions
+echo "Uploading transactions..."
+curl -s -b /tmp/findash_session.txt \
+  -X POST "$APP_URL/api/transactions/upload" \
+  -F "file=@$PROJECT_ROOT/transactions.json"
+
+# 3. Upload insights
+echo "Uploading insights..."
+curl -s -b /tmp/findash_session.txt \
+  -X POST "$APP_URL/api/transactions/upload" \
+  -F "file=@$PROJECT_ROOT/insights.json"
+
+# 4. Clean up
+rm -f /tmp/findash_session.txt
+```
+
+The API returns JSON with merge results for each upload — show them to the user.
+
+### Option B — Direct blob upload (fallback, requires BLOB_READ_WRITE_TOKEN)
 
 ```bash
 cd "$PROJECT_ROOT"
@@ -279,21 +311,19 @@ pnpm upload transactions.json
 pnpm upload insights.json
 ```
 
-These commands run `tsx scripts/upload-data.ts` — they require `BLOB_READ_WRITE_TOKEN` in `.env.local`.
-
-If the upload prints new URLs (first-time upload), remind the user:
-> "First-time upload — copy these URLs into your Vercel environment variables as `BLOB_URL_TRANSACTIONS` and `BLOB_URL_INSIGHTS`. You only need to do this once; subsequent uploads to the same filename keep the same URL."
+If this prints new blob URLs (first-time upload), tell the user:
+> "Add these to your Vercel environment variables — you only need to do this once:
+> `BLOB_URL_TRANSACTIONS=<url>`
+> `BLOB_URL_INSIGHTS=<url>`"
 
 ---
 
-## Step 10: Confirm
+## Step 11: Confirm
 
 Report a summary:
-- Total transactions in dataset (before and after)
-- New transactions added
-- Date range covered
-- Months regenerated vs. preserved in insights
-- Any new anomalies flagged
+- Transactions: count before → after, new added, duplicates skipped, date range
+- Insights: months updated, months preserved, new anomalies flagged
+- Any action the user should take (e.g. set new env vars)
 
 ---
 
@@ -301,15 +331,15 @@ Report a summary:
 
 | Problem | Action |
 |---------|--------|
-| Can't read a file | Tell the user and skip that file; continue with others |
-| Ambiguous column format | Ask the user to clarify one example row |
-| Missing BLOB_READ_WRITE_TOKEN | Tell user to add it to `.env.local` and re-run |
-| Upload fails | The JSON files are saved locally — tell user to run `pnpm upload` manually |
+| Can't read a file | Skip it, tell user, continue with others |
+| Ambiguous CSV format | Ask user to clarify one example row |
+| Auth fails (Option A) | Check `FINDASH_PASSWORD` in `.env.local`; fall back to Option B |
+| Upload fails | Files are saved locally — user can upload manually via the dashboard `/upload` page or `pnpm upload` |
 | Date can't be parsed | Skip that row and report it |
-| Existing insights fetch fails | Log a warning and generate insights from scratch |
+| Existing data fetch fails | Warn user, proceed with empty baseline |
 
 ---
 
 ## Privacy Note
 
-All processing happens locally in this Claude Code session. Financial data is read only to populate the JSON files — it is never sent anywhere except to your own Vercel Blob storage via the upload script.
+All processing happens locally in this Claude Code session. Financial data is only written to your own Vercel Blob storage — nothing is sent to third parties.
