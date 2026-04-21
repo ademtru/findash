@@ -1,106 +1,98 @@
 @import "tailwindcss";
 
 :root {
-  --background: 222 84% 5%;
-  --foreground: 210 40% 98%;
-  --card: 220 40% 7%;
-  --card-foreground: 210 40% 98%;
-  --popover: 220 40% 7%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 189 94% 43%;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 11%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 17%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 211 100% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 258 89% 66%;
+  --secondary: 280 92% 65%;
   --secondary-foreground: 0 0% 100%;
-  --muted: 220 20% 14%;
-  --muted-foreground: 215 16% 47%;
-  --accent: 220 20% 14%;
-  --accent-foreground: 210 40% 98%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 220 20% 14%;
-  --input: 220 20% 14%;
-  --ring: 189 94% 43%;
-  --radius: 0.75rem;
+  --muted: 0 0% 17%;
+  --muted-foreground: 240 6% 65%;
+  --accent: 0 0% 17%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 3 86% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 240 5% 22%;
+  --input: 0 0% 11%;
+  --ring: 211 100% 53%;
+  --radius: 1rem;
 }
 
-* {
-  border-color: hsl(var(--border));
-}
+* { box-sizing: border-box; }
 
 body {
-  background: #030712;
-  color: hsl(var(--foreground));
-  font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+  background: #000;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+    'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle dot grid background */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-  z-index: 0;
+/* ─── iOS Cards ─────────────────────────────────────────────────── */
+
+/* Primary card surface */
+.ios-card {
+  background: #1c1c1e;
+  border-radius: 16px;
 }
 
-/* Ambient glow blobs */
-body::after {
-  content: '';
-  position: fixed;
-  top: -20%;
-  left: -10%;
-  width: 60%;
-  height: 60%;
-  background: radial-gradient(ellipse, rgba(6,182,212,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+/* Elevated card (inside a card, modals) */
+.ios-card-elevated {
+  background: #2c2c2e;
+  border-radius: 12px;
 }
 
-/* All content above bg effects */
-#__next, main, aside, nav {
-  position: relative;
-  z-index: 1;
+/* Grouped list container (iOS table/list style) */
+.ios-list {
+  background: #1c1c1e;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+/* Row separator — use as class on every row except last */
+.ios-row-sep {
+  border-bottom: 0.5px solid rgba(84, 84, 88, 0.45);
+}
 
-/* Glow utilities */
-.glow-cyan { box-shadow: 0 0 20px rgba(6,182,212,0.15), 0 0 40px rgba(6,182,212,0.05); }
-.glow-violet { box-shadow: 0 0 20px rgba(139,92,246,0.15), 0 0 40px rgba(139,92,246,0.05); }
-.text-glow-cyan { text-shadow: 0 0 20px rgba(6,182,212,0.5); }
-.neon-border { border-color: rgba(6,182,212,0.3) !important; }
+/* ─── Frosted Glass ──────────────────────────────────────────────── */
+/* Only for nav bars and floating overlays */
+.ios-glass {
+  background: rgba(22, 22, 24, 0.88);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
 
-/* Glass card */
+/* ─── Legacy .glass → solid Apple card ──────────────────────────── */
 .glass {
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #1c1c1e;
+  border-radius: 12px;
 }
-
 .glass:hover {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.1);
+  background: #222224;
 }
 
-/* Gradient text */
+/* ─── Typography helpers ─────────────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  background: linear-gradient(135deg, #0a84ff, #bf5af2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Active nav item */
+/* ─── Active nav ─────────────────────────────────────────────────── */
 .nav-active {
-  background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(139,92,246,0.1));
-  border: 1px solid rgba(6,182,212,0.25);
-  color: #06B6D4;
+  background: rgba(10, 132, 255, 0.15);
+  color: #0a84ff;
 }
+
+/* ─── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(84, 84, 88, 0.5); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(84, 84, 88, 0.8); }

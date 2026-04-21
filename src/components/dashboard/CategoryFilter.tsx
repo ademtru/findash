@@ -27,14 +27,15 @@ export function CategoryFilter({ categories, selectedCategory }: CategoryFilterP
           <button
             key={cat}
             onClick={() => setCategory(isActive ? null : cat)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-[13px] font-medium transition-all cursor-pointer"
+            style={
               isActive
-                ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
-                : 'text-slate-400 border border-white/[0.08] hover:text-slate-200 hover:border-white/20'
-            }`}
+                ? { background: 'rgba(10,132,255,0.15)', color: '#0a84ff' }
+                : { background: 'rgba(120,120,128,0.18)', color: 'rgba(235,235,245,0.6)' }
+            }
           >
             {cat}
-            {isActive && <span className="text-cyan-400/70 hover:text-cyan-300 leading-none">×</span>}
+            {isActive && <span className="text-[#0a84ff] opacity-70 leading-none">×</span>}
           </button>
         )
       })}

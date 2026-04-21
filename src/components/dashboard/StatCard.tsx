@@ -1,5 +1,11 @@
-import { cn } from '@/lib/utils'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
+
+const ACCENT: Record<string, string> = {
+  cyan:    '#0a84ff',
+  violet:  '#bf5af2',
+  emerald: '#30d158',
+  default: '#ffffff',
+}
 
 interface StatCardProps {
   title: string
@@ -11,31 +17,32 @@ interface StatCardProps {
 
 export function StatCard({ title, value, subtitle, trend, accent = 'default' }: StatCardProps) {
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus
-  const trendColor = trend === 'up' ? 'text-emerald-400' : trend === 'down' ? 'text-red-400' : 'text-slate-500'
-
-  const accentBar = {
-    cyan: 'from-cyan-500 to-cyan-400',
-    violet: 'from-violet-500 to-violet-400',
-    emerald: 'from-emerald-500 to-emerald-400',
-    default: 'from-slate-600 to-slate-500',
-  }[accent]
+  const trendColor = trend === 'up' ? '#30d158' : trend === 'down' ? '#ff453a' : 'rgba(235,235,245,0.4)'
 
   return (
-    <div className="glass rounded-2xl p-5 relative overflow-hidden group cursor-default transition-all duration-300 hover:glow-cyan">
-      {/* Top accent line */}
-      <div className={cn('absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r opacity-60', accentBar)} />
+    <div className="ios-card p-5">
+      <p
+        className="text-[12px] font-medium leading-tight mb-2 truncate"
+        style={{ color: 'rgba(235,235,245,0.55)' }}
+      >
+        {title}
+      </p>
 
-      <p className="text-[11px] font-medium text-slate-500 uppercase tracking-widest mb-3">{title}</p>
-      <p className={cn(
-        'text-2xl font-bold tracking-tight',
-        accent === 'cyan' ? 'gradient-text' : 'text-white'
-      )}>
+      <p
+        className="text-[26px] font-bold tracking-tight tabular-nums leading-none"
+        style={{ color: ACCENT[accent] }}
+      >
         {value}
       </p>
-      {subtitle && (
-        <div className={cn('flex items-center gap-1.5 mt-2', trendColor)}>
-          {trend && <TrendIcon className="h-3 w-3" />}
-          <span className="text-xs">{subtitle}</span>
+
+      {(subtitle || trend) && (
+        <div className="flex items-center gap-1.5 mt-2.5">
+          {trend && <TrendIcon className="h-3 w-3 shrink-0" style={{ color: trendColor }} />}
+          {subtitle && (
+            <span className="text-[12px]" style={{ color: trendColor }}>
+              {subtitle}
+            </span>
+          )}
         </div>
       )}
     </div>

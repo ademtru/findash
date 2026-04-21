@@ -15,12 +15,9 @@ export default async function InvestmentsPage({
   const { transactions } = await getTransactions()
 
   const months = getAvailableMonths(transactions)
-
-  // Holdings are always all-time (cumulative cost basis)
   const holdings = getInvestmentHoldings(transactions)
   const totalInvested = holdings.reduce((sum, h) => sum + h.cost, 0)
 
-  // Monthly invested = investment transactions in the selected month only
   const monthlyInvested = month
     ? filterByMonth(transactions, month)
         .filter(t => t.type === 'investment')
@@ -30,28 +27,26 @@ export default async function InvestmentsPage({
   const allocationData = holdings.map(h => ({ category: h.ticker, amount: h.cost }))
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Investments</h1>
-          <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Portfolio holdings and allocation</p>
-        </div>
+    <div className="px-4 py-5 md:px-6 md:py-6 space-y-5">
+      <div className="flex items-center justify-between">
+        <h1 className="text-[28px] font-bold text-white tracking-tight">Investments</h1>
         <RefreshButton />
       </div>
+
       <MonthSelector months={months} />
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <StatCard title="Total Invested" value={`$${totalInvested.toLocaleString()}`} trend="up" />
         <StatCard title="Holdings" value={`${holdings.length}`} />
         {monthlyInvested !== null
-          ? <StatCard title="Invested This Month" value={`$${monthlyInvested.toLocaleString()}`} accent="violet" />
+          ? <StatCard title="This Month" value={`$${monthlyInvested.toLocaleString()}`} accent="violet" />
           : <StatCard title="Largest Position" value={holdings[0]?.ticker ?? '—'} />
         }
       </div>
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+
+      <div className="grid md:grid-cols-2 gap-4">
         <SpendingDonut data={allocationData} />
-        <div className="flex flex-col justify-start">
-          <HoldingsTable holdings={holdings} />
-        </div>
+        <HoldingsTable holdings={holdings} />
       </div>
     </div>
   )

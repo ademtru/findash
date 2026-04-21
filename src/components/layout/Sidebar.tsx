@@ -1,105 +1,97 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles, LogOut, Zap, CloudUpload } from 'lucide-react'
+import {
+  LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp,
+  Sparkles, LogOut, CloudUpload,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Overview', icon: LayoutDashboard },
+  { href: '/',             label: 'Overview',     icon: LayoutDashboard },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { href: '/spending', label: 'Spending', icon: PieChart },
-  { href: '/investments', label: 'Investments', icon: TrendingUp },
-  { href: '/insights', label: 'AI Insights', icon: Sparkles },
+  { href: '/spending',     label: 'Spending',     icon: PieChart },
+  { href: '/investments',  label: 'Investments',  icon: TrendingUp },
+  { href: '/insights',     label: 'AI Insights',  icon: Sparkles },
 ]
 
 const UTILITY_ITEMS = [
   { href: '/upload', label: 'Upload Data', icon: CloudUpload },
 ]
 
-export function Sidebar() {
+function NavItem({
+  href, label, icon: Icon,
+}: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }) {
   const pathname = usePathname()
+  const active = pathname === href
+  return (
+    <Link
+      href={href}
+      className={cn(
+        'flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-[14px] font-medium transition-all duration-150 cursor-pointer select-none',
+        active
+          ? 'nav-active'
+          : 'text-[rgba(235,235,245,0.55)] hover:text-white hover:bg-[rgba(255,255,255,0.06)]',
+      )}
+    >
+      <Icon className={cn('h-[17px] w-[17px] shrink-0', active ? 'text-[#0a84ff]' : '')} />
+      {label}
+    </Link>
+  )
+}
 
+export function Sidebar() {
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
     window.location.href = '/login'
   }
 
   return (
-    <aside className="hidden md:flex flex-col w-64 min-h-screen border-r border-white/[0.06] px-4 py-6 relative z-10"
-      style={{ background: 'rgba(3,7,18,0.8)', backdropFilter: 'blur(20px)' }}>
-      {/* Logo */}
-      <div className="mb-8 px-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: 'linear-gradient(135deg, #06B6D4, #8B5CF6)', boxShadow: '0 0 20px rgba(6,182,212,0.3)' }}>
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <h1 className="text-base font-bold tracking-tight text-white">Findash</h1>
-            <p className="text-[10px] text-slate-500 uppercase tracking-widest">Finance OS</p>
-          </div>
+    <aside
+      className="hidden md:flex flex-col w-[255px] min-h-screen px-3 py-5 relative z-10 ios-glass border-r border-[rgba(84,84,88,0.3)]"
+    >
+      {/* App identity */}
+      <div className="mb-6 px-2 flex items-center gap-3">
+        <div
+          className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 select-none"
+          style={{ background: 'linear-gradient(135deg, #0a84ff, #bf5af2)' }}
+        >
+          <span className="text-white font-bold text-[16px]">F</span>
+        </div>
+        <div>
+          <p className="text-[15px] font-semibold text-white leading-tight">Findash</p>
+          <p className="text-[11px] leading-tight" style={{ color: 'rgba(235,235,245,0.35)' }}>
+            Finance Dashboard
+          </p>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 space-y-1">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
-                active
-                  ? 'nav-active'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-              )}
-            >
-              <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-cyan-400' : '')} />
-              {label}
-              {active && <span className="ml-auto w-1 h-1 rounded-full bg-cyan-400" />}
-            </Link>
-          )
-        })}
+      {/* Primary nav */}
+      <nav className="flex-1 space-y-[2px]">
+        {NAV_ITEMS.map(item => <NavItem key={item.href} {...item} />)}
       </nav>
 
-      {/* Divider */}
-      <div className="h-px bg-white/[0.06] my-4" />
-
-      {/* Utility links */}
-      <div className="space-y-1 mb-2">
-        {UTILITY_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
-                active
-                  ? 'nav-active'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
-              )}
-            >
-              <Icon className={cn('h-4 w-4 shrink-0', active ? 'text-cyan-400' : '')} />
-              {label}
-              {active && <span className="ml-auto w-1 h-1 rounded-full bg-cyan-400" />}
-            </Link>
-          )
-        })}
+      {/* Utility section */}
+      <div className="space-y-[2px] mt-4">
+        <p
+          className="px-3 text-[11px] font-semibold uppercase tracking-wider mb-1.5"
+          style={{ color: 'rgba(235,235,245,0.3)' }}
+        >
+          Data
+        </p>
+        {UTILITY_ITEMS.map(item => <NavItem key={item.href} {...item} />)}
       </div>
 
-      {/* Divider */}
-      <div className="h-px bg-white/[0.06] mb-4" />
+      <div className="h-px my-3" style={{ background: 'rgba(84,84,88,0.35)' }} />
 
-      {/* Logout */}
+      {/* Sign out */}
       <button
         onClick={handleLogout}
-        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:text-white hover:bg-white/[0.05] transition-all duration-200 cursor-pointer w-full"
+        className="flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-[14px] font-medium transition-all duration-150 cursor-pointer w-full hover:bg-[rgba(255,255,255,0.06)]"
+        style={{ color: 'rgba(235,235,245,0.4)' }}
       >
-        <LogOut className="h-4 w-4 shrink-0" />
-        Sign out
+        <LogOut className="h-[17px] w-[17px] shrink-0" />
+        Sign Out
       </button>
     </aside>
   )

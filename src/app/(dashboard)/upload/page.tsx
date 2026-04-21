@@ -64,11 +64,8 @@ export default function UploadPage() {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6 max-w-lg mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">Upload Data</h1>
-        <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest">Update transactions from anywhere</p>
-      </div>
+    <div className="px-4 py-5 md:px-6 md:py-6 space-y-5 max-w-lg mx-auto">
+      <h1 className="text-[28px] font-bold text-white tracking-tight">Upload Data</h1>
 
       {/* Drop zone */}
       <div
@@ -76,21 +73,23 @@ export default function UploadPage() {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onClick={() => status === 'idle' && inputRef.current?.click()}
-        className={`glass rounded-2xl p-10 border-2 border-dashed flex flex-col items-center gap-4 transition-all duration-200 ${
-          status === 'idle' ? 'cursor-pointer' : 'cursor-default'
-        } ${
-          isDragging
-            ? 'border-cyan-500/50 bg-cyan-500/5'
-            : 'border-white/10 hover:border-white/20'
-        }`}
+        className="ios-card p-10 flex flex-col items-center gap-4 transition-all duration-200 border-2 border-dashed"
+        style={{
+          cursor: status === 'idle' ? 'pointer' : 'default',
+          borderColor: isDragging ? '#0a84ff' : 'rgba(84,84,88,0.5)',
+          background: isDragging ? 'rgba(10,132,255,0.06)' : '#1c1c1e',
+        }}
       >
-        <CloudUpload className={`h-10 w-10 transition-colors ${isDragging ? 'text-cyan-400' : 'text-slate-600'}`} />
+        <CloudUpload
+          className="h-10 w-10 transition-colors"
+          style={{ color: isDragging ? '#0a84ff' : 'rgba(235,235,245,0.25)' }}
+        />
         <div className="text-center">
-          <p className="text-sm text-slate-300 font-medium">
+          <p className="text-[15px] font-medium text-white">
             {file ? file.name : 'Drop transactions.json here'}
           </p>
-          <p className="text-xs text-slate-500 mt-1">
-            {file ? `${(file.size / 1024).toFixed(1)} KB selected` : 'or tap to browse'}
+          <p className="text-[13px] mt-1" style={{ color: 'rgba(235,235,245,0.4)' }}>
+            {file ? `${(file.size / 1024).toFixed(1)} KB` : 'or tap to browse'}
           </p>
         </div>
         <input
@@ -102,19 +101,20 @@ export default function UploadPage() {
         />
       </div>
 
-      {/* Actions */}
+      {/* Upload button */}
       {file && status === 'idle' && (
-        <div className="flex gap-3">
+        <div className="flex gap-2.5">
           <button
             onClick={handleUpload}
-            className="flex-1 py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200 cursor-pointer hover:opacity-90"
-            style={{ background: 'linear-gradient(135deg, #06B6D4, #8B5CF6)' }}
+            className="flex-1 py-3.5 rounded-[14px] text-[16px] font-semibold text-white cursor-pointer transition-all active:scale-[0.98]"
+            style={{ background: '#0a84ff' }}
           >
             Upload &amp; Merge
           </button>
           <button
             onClick={reset}
-            className="px-4 py-3 rounded-xl text-sm text-slate-500 hover:text-slate-300 glass transition-colors cursor-pointer"
+            className="px-4 py-3.5 rounded-[14px] cursor-pointer transition-colors active:opacity-60"
+            style={{ background: 'rgba(120,120,128,0.24)', color: 'rgba(235,235,245,0.6)' }}
           >
             <X className="h-4 w-4" />
           </button>
@@ -123,36 +123,44 @@ export default function UploadPage() {
 
       {/* Loading */}
       {status === 'uploading' && (
-        <div className="glass rounded-2xl p-6 flex items-center justify-center gap-3">
-          <div className="animate-spin rounded-full h-5 w-5 border-2 border-cyan-500 border-t-transparent" />
-          <span className="text-sm text-slate-400">Merging transactions…</span>
+        <div className="ios-card p-6 flex items-center justify-center gap-3">
+          <div
+            className="animate-spin rounded-full h-5 w-5 border-2 border-t-transparent"
+            style={{ borderColor: '#0a84ff', borderTopColor: 'transparent' }}
+          />
+          <span className="text-[14px]" style={{ color: 'rgba(235,235,245,0.6)' }}>
+            Merging transactions…
+          </span>
         </div>
       )}
 
       {/* Success */}
       {status === 'success' && result && (
-        <div className="glass rounded-2xl p-6 space-y-4">
-          <div className="flex items-center gap-2 text-emerald-400">
-            <CheckCircle className="h-5 w-5" />
-            <span className="font-semibold text-sm">Upload successful</span>
+        <div className="ios-card p-5 space-y-4">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5" style={{ color: '#30d158' }} />
+            <span className="font-semibold text-[15px]" style={{ color: '#30d158' }}>
+              Upload successful
+            </span>
           </div>
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="glass rounded-xl p-3">
-              <p className="text-2xl font-bold text-emerald-400">{result.added}</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Added</p>
-            </div>
-            <div className="glass rounded-xl p-3">
-              <p className="text-2xl font-bold text-slate-500">{result.duplicates}</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Skipped</p>
-            </div>
-            <div className="glass rounded-xl p-3">
-              <p className="text-2xl font-bold text-white">{result.total}</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Total</p>
-            </div>
+            {[
+              { label: 'Added',   value: result.added,      color: '#30d158' },
+              { label: 'Skipped', value: result.duplicates, color: 'rgba(235,235,245,0.4)' },
+              { label: 'Total',   value: result.total,      color: '#ffffff' },
+            ].map(({ label, value, color }) => (
+              <div key={label} className="ios-card-elevated rounded-xl p-3">
+                <p className="text-[24px] font-bold tabular-nums" style={{ color }}>{value}</p>
+                <p className="text-[11px] mt-1 uppercase tracking-wide" style={{ color: 'rgba(235,235,245,0.4)' }}>
+                  {label}
+                </p>
+              </div>
+            ))}
           </div>
           <button
             onClick={reset}
-            className="w-full text-sm text-slate-500 hover:text-slate-300 transition-colors cursor-pointer pt-2"
+            className="w-full text-[14px] pt-1 cursor-pointer"
+            style={{ color: 'rgba(235,235,245,0.4)' }}
           >
             Upload another file
           </button>
@@ -161,14 +169,15 @@ export default function UploadPage() {
 
       {/* Error */}
       {status === 'error' && (
-        <div className="glass rounded-2xl p-5 flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+        <div className="ios-card p-5 flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: '#ff453a' }} />
           <div>
-            <p className="text-sm font-semibold text-red-400">Upload failed</p>
-            <p className="text-xs text-slate-400 mt-1">{error}</p>
+            <p className="text-[14px] font-semibold" style={{ color: '#ff453a' }}>Upload failed</p>
+            <p className="text-[13px] mt-1" style={{ color: 'rgba(235,235,245,0.5)' }}>{error}</p>
             <button
               onClick={() => setStatus('idle')}
-              className="text-xs text-slate-500 hover:text-slate-300 mt-3 cursor-pointer"
+              className="text-[13px] mt-3 cursor-pointer"
+              style={{ color: '#0a84ff' }}
             >
               Try again
             </button>
@@ -177,13 +186,15 @@ export default function UploadPage() {
       )}
 
       {/* Info */}
-      <div className="glass rounded-2xl p-5 space-y-2">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">How it works</p>
-        <ul className="space-y-1.5 text-xs text-slate-400">
-          <li>• Upload a JSON file containing new transactions</li>
-          <li>• Duplicates (matching <code className="text-cyan-400">id</code>) are automatically skipped</li>
+      <div className="ios-card p-5 space-y-2">
+        <p className="text-[12px] font-semibold uppercase tracking-wide" style={{ color: 'rgba(235,235,245,0.4)' }}>
+          How it works
+        </p>
+        <ul className="space-y-1.5 text-[13px]" style={{ color: 'rgba(235,235,245,0.55)' }}>
+          <li>• Upload a JSON file with new transactions</li>
+          <li>• Duplicates (matching <code style={{ color: '#0a84ff' }}>id</code>) are automatically skipped</li>
           <li>• New transactions are appended to existing data</li>
-          <li>• Accepts <code className="text-cyan-400">{`{ transactions: [...] }`}</code> or a bare array</li>
+          <li>• Accepts <code style={{ color: '#0a84ff' }}>{`{ transactions: [...] }`}</code> or a bare array</li>
         </ul>
       </div>
     </div>

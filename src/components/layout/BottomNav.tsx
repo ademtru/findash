@@ -1,34 +1,46 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp, Sparkles, CloudUpload } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import {
+  LayoutDashboard, ArrowLeftRight, PieChart,
+  TrendingUp, Sparkles, CloudUpload,
+} from 'lucide-react'
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Overview', icon: LayoutDashboard },
-  { href: '/transactions', label: 'Txns', icon: ArrowLeftRight },
-  { href: '/spending', label: 'Spend', icon: PieChart },
-  { href: '/investments', label: 'Invest', icon: TrendingUp },
-  { href: '/insights', label: 'AI', icon: Sparkles },
-  { href: '/upload', label: 'Upload', icon: CloudUpload },
+  { href: '/',             label: 'Home',    icon: LayoutDashboard },
+  { href: '/transactions', label: 'Txns',    icon: ArrowLeftRight },
+  { href: '/spending',     label: 'Spend',   icon: PieChart },
+  { href: '/investments',  label: 'Invest',  icon: TrendingUp },
+  { href: '/insights',     label: 'AI',      icon: Sparkles },
+  { href: '/upload',       label: 'Upload',  icon: CloudUpload },
 ]
 
 export function BottomNav() {
   const pathname = usePathname()
+
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06]"
-      style={{ background: 'rgba(3,7,18,0.95)', backdropFilter: 'blur(20px)' }}>
-      <div className="flex">
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50"
+      style={{
+        borderTop: '0.5px solid rgba(84,84,88,0.5)',
+        background: 'rgba(22,22,24,0.92)',
+        backdropFilter: 'blur(40px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+      }}
+    >
+      <div className="flex h-[49px]">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname === href
           return (
-            <Link key={href} href={href}
-              className={cn(
-                'flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors cursor-pointer',
-                active ? 'text-cyan-400' : 'text-slate-500'
-              )}>
-              <Icon className="h-5 w-5" />
-              <span>{label}</span>
+            <Link
+              key={href}
+              href={href}
+              className="flex-1 flex flex-col items-center justify-center gap-[3px] cursor-pointer select-none active:opacity-50 transition-opacity"
+              style={{ color: active ? '#0a84ff' : 'rgba(235,235,245,0.45)' }}
+            >
+              <Icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.2 : 1.8} />
+              <span className="text-[9px] font-medium">{label}</span>
             </Link>
           )
         })}

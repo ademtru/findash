@@ -10,17 +10,20 @@ export function RefreshButton() {
   function handleRefresh() {
     setSpinning(true)
     router.refresh()
-    // Reset after animation completes
     setTimeout(() => setSpinning(false), 800)
   }
 
   return (
     <button
       onClick={handleRefresh}
-      className="p-2 rounded-xl hover:bg-white/[0.06] transition-colors cursor-pointer"
+      className="p-2 rounded-[10px] transition-colors cursor-pointer active:opacity-60"
+      style={{ background: 'rgba(120,120,128,0.18)' }}
       aria-label="Refresh data"
     >
-      <RotateCcw className={`h-4 w-4 text-slate-400 hover:text-slate-200 transition-colors ${spinning ? 'animate-spin' : ''}`} />
+      <RotateCcw
+        className={`h-[17px] w-[17px] transition-colors ${spinning ? 'animate-spin' : ''}`}
+        style={{ color: 'rgba(235,235,245,0.6)' }}
+      />
     </button>
   )
 }

@@ -2,7 +2,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 import { useRouter } from 'next/navigation'
 
-const COLORS = ['#06B6D4', '#8B5CF6', '#10B981', '#F59E0B', '#EF4444', '#EC4899']
+const COLORS = ['#0a84ff', '#bf5af2', '#30d158', '#ff9f0a', '#ff453a', '#40c8e0']
 
 interface CategoryData {
   category: string
@@ -18,10 +18,17 @@ interface SpendingDonutProps {
 const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null
   return (
-    <div className="glass rounded-xl p-3 text-xs border border-white/10">
+    <div
+      className="rounded-xl p-3 text-[13px]"
+      style={{ background: '#2c2c2e', border: '0.5px solid rgba(84,84,88,0.6)' }}
+    >
       <p className="text-white font-semibold">{payload[0].name}</p>
-      <p className="text-cyan-400">${payload[0].value.toFixed(2)}</p>
-      <p className="text-slate-500 mt-1">Click to drill down →</p>
+      <p className="tabular-nums mt-0.5" style={{ color: '#0a84ff' }}>
+        ${payload[0].value.toFixed(2)}
+      </p>
+      <p className="mt-1 text-[12px]" style={{ color: 'rgba(235,235,245,0.4)' }}>
+        Tap to drill down
+      </p>
     </div>
   )
 }
@@ -38,8 +45,8 @@ export function SpendingDonut({ data, month }: SpendingDonutProps) {
   }
 
   return (
-    <div className="glass rounded-2xl p-5">
-      <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-5">Spending</p>
+    <div className="ios-card p-5">
+      <p className="text-[13px] font-semibold text-white mb-4">Spending</p>
       <div className="relative">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
@@ -49,9 +56,9 @@ export function SpendingDonut({ data, month }: SpendingDonutProps) {
               nameKey="category"
               cx="50%"
               cy="50%"
-              innerRadius={55}
-              outerRadius={80}
-              paddingAngle={3}
+              innerRadius={56}
+              outerRadius={82}
+              paddingAngle={2}
               strokeWidth={0}
               onClick={(entry) => handleCategoryClick((entry as unknown as CategoryData).category)}
               style={{ cursor: 'pointer' }}
@@ -63,20 +70,22 @@ export function SpendingDonut({ data, month }: SpendingDonutProps) {
         </ResponsiveContainer>
         {/* Center label */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <p className="text-lg font-bold text-white">${(total/1000).toFixed(1)}k</p>
-          <p className="text-[10px] text-slate-500 uppercase tracking-wider">total</p>
+          <p className="text-[18px] font-bold text-white tabular-nums">${(total / 1000).toFixed(1)}k</p>
+          <p className="text-[11px]" style={{ color: 'rgba(235,235,245,0.4)' }}>total</p>
         </div>
       </div>
       {/* Legend */}
-      <div className="grid grid-cols-2 gap-1.5 mt-4">
+      <div className="grid grid-cols-2 gap-y-2 gap-x-3 mt-4">
         {data.slice(0, 6).map((d, i) => (
           <button
             key={d.category}
             onClick={() => handleCategoryClick(d.category)}
-            className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center gap-2 text-left cursor-pointer active:opacity-60 transition-opacity"
           >
             <span className="w-2 h-2 rounded-full shrink-0" style={{ background: COLORS[i % COLORS.length] }} />
-            <span className="text-[11px] text-slate-400 truncate hover:text-slate-200 transition-colors">{d.category}</span>
+            <span className="text-[12px] truncate" style={{ color: 'rgba(235,235,245,0.6)' }}>
+              {d.category}
+            </span>
           </button>
         ))}
       </div>

@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Zap, Lock } from 'lucide-react'
+import { Lock } from 'lucide-react'
 
 export default function LoginPage() {
   const [password, setPassword] = useState('')
@@ -21,65 +21,73 @@ export default function LoginPage() {
     if (res.ok) {
       router.push('/')
     } else {
-      setError('Invalid password')
+      setError('Incorrect password')
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative">
-      {/* Extra glow for login page */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-96 h-96 rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.4) 0%, transparent 70%)' }} />
+    <div
+      className="min-h-screen flex flex-col items-center justify-center px-6"
+      style={{ background: '#000' }}
+    >
+      {/* App icon */}
+      <div
+        className="w-[76px] h-[76px] rounded-[18px] flex items-center justify-center mb-5 select-none"
+        style={{
+          background: 'linear-gradient(145deg, #0a84ff, #bf5af2)',
+          boxShadow: '0 8px 32px rgba(10,132,255,0.35)',
+        }}
+      >
+        <span className="text-white font-bold text-[34px] leading-none">F</span>
       </div>
 
-      <div className="w-full max-w-sm relative z-10">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
-            style={{ background: 'linear-gradient(135deg, #06B6D4, #8B5CF6)', boxShadow: '0 0 40px rgba(6,182,212,0.3)' }}>
-            <Zap className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-white">Findash</h1>
-          <p className="text-xs text-slate-500 uppercase tracking-widest mt-1">Finance OS</p>
+      {/* Title */}
+      <h1 className="text-[28px] font-bold text-white mb-1">Findash</h1>
+      <p className="text-[14px] mb-10" style={{ color: 'rgba(235,235,245,0.5)' }}>
+        Your personal finance dashboard
+      </p>
+
+      {/* Form card */}
+      <div className="w-full max-w-[340px] space-y-3">
+        <div className="relative">
+          <Lock
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-[15px] w-[15px]"
+            style={{ color: 'rgba(235,235,245,0.35)' }}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            autoFocus
+            className="w-full rounded-[14px] pl-11 pr-4 py-[14px] text-[16px] text-white outline-none transition-all"
+            style={{
+              background: 'rgba(120,120,128,0.24)',
+              caretColor: '#0a84ff',
+            }}
+            onFocus={e => (e.currentTarget.style.outline = '2px solid rgba(10,132,255,0.6)')}
+            onBlur={e => (e.currentTarget.style.outline = 'none')}
+          />
         </div>
 
-        {/* Card */}
-        <div className="glass rounded-2xl p-6 glow-cyan">
-          <div className="flex items-center gap-2 mb-5">
-            <Lock className="w-3.5 h-3.5 text-cyan-400" />
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Secure Access</p>
-          </div>
+        {error && (
+          <p className="text-[13px] text-center" style={{ color: '#ff453a' }}>
+            {error}
+          </p>
+        )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="relative">
-              <input
-                type="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                autoFocus
-                className="w-full glass rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-600 outline-none focus:border-cyan-500/50 transition-colors"
-              />
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-400 flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-red-400 inline-block" />
-                {error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading || !password}
-              className="w-full py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{ background: 'linear-gradient(135deg, #06B6D4, #8B5CF6)', boxShadow: loading ? 'none' : '0 0 30px rgba(6,182,212,0.2)' }}>
-              {loading ? 'Authenticating...' : 'Access Dashboard'}
-            </button>
-          </form>
-        </div>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading || !password}
+          className="w-full py-[14px] rounded-[14px] text-[16px] font-semibold text-white transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]"
+          style={{
+            background: loading || !password ? 'rgba(10,132,255,0.5)' : '#0a84ff',
+          }}
+        >
+          {loading ? 'Signing in…' : 'Sign In'}
+        </button>
       </div>
     </div>
   )
