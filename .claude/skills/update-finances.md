@@ -9,7 +9,7 @@ You are updating the Findash financial dashboard with new transaction data.
 
 ## Overview
 
-This skill processes uploaded financial files (bank statements, CSVs, screenshots, PDFs), extracts transactions, merges them with existing data, generates AI insights, and uploads both JSON files to Vercel Blob.
+This skill processes uploaded financial files (bank statements, CSVs, screenshots, PDFs), extracts transactions, merges them with existing data, generates AI insights (building on previous insights), and uploads both JSON files to Vercel Blob.
 
 **Announce at start:** "Using update-finances skill to process your financial files."
 
@@ -28,26 +28,46 @@ Accept any combination of:
 
 ---
 
-## Step 2: Load Existing Transactions
+## Step 2: Load Existing Data
 
-Fetch current data from Vercel Blob:
+Find the project root (the directory containing `package.json`):
 
 ```bash
-# Check .env.local for BLOB_URL_TRANSACTIONS
-grep BLOB_URL_TRANSACTIONS /Users/adems/projects/findash/.env.local
+PROJECT_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 ```
 
-If `BLOB_URL_TRANSACTIONS` is set and non-empty:
+### Load existing transactions
+
+```bash
+grep BLOB_URL_TRANSACTIONS "$PROJECT_ROOT/.env.local" 2>/dev/null
+```
+
+If `BLOB_URL_TRANSACTIONS` is set:
 ```bash
 curl -s "$BLOB_URL_TRANSACTIONS" > /tmp/existing_transactions.json
 ```
 
-If the URL is not set or fetch fails, start with an empty dataset:
-```json
-{ "transactions": [] }
-```
+If not set or fetch fails, start with `{ "transactions": [] }`.
 
 Read and remember the existing transaction IDs to enable deduplication later.
+
+### Load existing insights
+
+```bash
+grep BLOB_URL_INSIGHTS "$PROJECT_ROOT/.env.local" 2>/dev/null
+```
+
+If `BLOB_URL_INSIGHTS` is set:
+```bash
+curl -s "$BLOB_URL_INSIGHTS" > /tmp/existing_insights.json
+```
+
+If not set or fetch fails, start with:
+```json
+{ "generated_at": "", "monthly": [], "anomalies": [], "trends": [], "investments": [] }
+```
+
+**Read the existing insights carefully** — you will build on them in Step 7, preserving insight history for months not covered by the new data.
 
 ---
 
@@ -137,10 +157,9 @@ Use these categories consistently:
 ## Step 5: Deduplicate and Merge
 
 1. Collect all newly extracted transactions
-2. Load existing transaction IDs (from Step 2)
-3. Filter out any new transaction whose ID already exists in the current data
-4. Append the non-duplicate new transactions to the existing list
-5. Sort the full list by `date` descending (newest first)
+2. Filter out any new transaction whose ID already exists in the current data
+3. Append the non-duplicate new transactions to the existing list
+4. Sort the full list by `date` descending (newest first)
 
 Report: "Found X new transactions (Y duplicates skipped)."
 
@@ -156,7 +175,7 @@ Write the merged data to the project root:
 }
 ```
 
-File path: `/Users/adems/projects/findash/transactions.json`
+File path: `$PROJECT_ROOT/transactions.json`
 
 Validate: the JSON is well-formed, all required fields are present, all amounts are numbers (not strings), all dates are YYYY-MM-DD.
 
@@ -164,11 +183,17 @@ Validate: the JSON is well-formed, all required fields are present, all amounts 
 
 ## Step 7: Generate AI Insights
 
-Analyze the full transaction dataset and produce insights. Think carefully — this is a personal finance AI assistant giving the user useful, specific observations.
+Analyze the full transaction dataset and produce insights. **You already have the existing insights from Step 2 — use them as your starting point:**
+
+- **Preserve** monthly summaries for months that have no new or changed transactions
+- **Regenerate** monthly summaries only for months that have new transactions in this update
+- **Add** new anomalies for newly imported data; existing anomalies are already stored
+- **Replace** trends with a fresh analysis of the full dataset (trends are always whole-picture)
+- **Update** investment commentary for tickers that appear in the new transactions; preserve commentary for tickers not in this update
 
 ### Monthly Insights
 
-For each month that has transactions, generate:
+For each month that has new or changed transactions, generate (or update):
 ```ts
 {
   month: "YYYY-MM",
@@ -182,9 +207,11 @@ Savings rate formula: `(totalIncome - totalExpenses) / totalIncome` where:
 - `totalIncome` = sum of all `income` type transactions (positive)
 - `totalExpenses` = sum of absolute values of all `expense` type transactions
 
+For months **not** affected by this update, copy the existing monthly insight unchanged.
+
 ### Anomalies
 
-Flag unusual transactions. Consider:
+Flag unusual transactions **in the newly imported data only** (existing anomalies are already stored and will be merged automatically). Consider:
 - Single transaction that is >3x the average for its category
 - Unusually large income spike or drop vs. previous months
 - Duplicate-looking transactions (same amount, same merchant, same week)
@@ -202,7 +229,7 @@ Severity guide: `high` = potential fraud or major financial event, `medium` = un
 
 ### Trends
 
-Identify 3-6 meaningful trends across the dataset:
+Identify 3-6 meaningful trends across the **full** dataset (all transactions, old and new):
 ```ts
 {
   type: "short label",
@@ -211,13 +238,12 @@ Identify 3-6 meaningful trends across the dataset:
 }
 ```
 
-Examples: spending increasing month-over-month in a category, savings rate improving, investment contributions growing, a recurring subscription they might not know is still active.
-
 `positive` = good for finances, `negative` = concerning, `neutral` = informational.
 
 ### Investment Insights
 
-For each unique ticker in investment transactions:
+For each unique ticker **in the new transactions**, update its commentary. For tickers not in this update, copy the existing commentary unchanged.
+
 ```ts
 {
   ticker: "AAPL",
@@ -229,24 +255,26 @@ For each unique ticker in investment transactions:
 
 ## Step 8: Write insights.json
 
+Produce the merged insights file — existing months/tickers not touched by this update are carried forward from the data loaded in Step 2:
+
 ```json
 {
   "generated_at": "ISO 8601 timestamp of now",
-  "monthly": [ ...monthly insights sorted oldest first... ],
-  "anomalies": [ ...sorted by severity desc, then date desc... ],
-  "trends": [ ...most impactful first... ],
-  "investments": [ ...sorted by total cost desc... ]
+  "monthly": [ ...all months (preserved + updated/new), sorted oldest first... ],
+  "anomalies": [ ...existing anomalies + new ones, sorted by severity desc then date desc... ],
+  "trends": [ ...fresh full-dataset trends, most impactful first... ],
+  "investments": [ ...all tickers (preserved + updated), sorted by total cost desc... ]
 }
 ```
 
-File path: `/Users/adems/projects/findash/insights.json`
+File path: `$PROJECT_ROOT/insights.json`
 
 ---
 
 ## Step 9: Upload to Vercel Blob
 
 ```bash
-cd /Users/adems/projects/findash
+cd "$PROJECT_ROOT"
 pnpm upload transactions.json
 pnpm upload insights.json
 ```
@@ -264,8 +292,8 @@ Report a summary:
 - Total transactions in dataset (before and after)
 - New transactions added
 - Date range covered
-- Months covered in insights
-- Any anomalies flagged
+- Months regenerated vs. preserved in insights
+- Any new anomalies flagged
 
 ---
 
@@ -278,6 +306,7 @@ Report a summary:
 | Missing BLOB_READ_WRITE_TOKEN | Tell user to add it to `.env.local` and re-run |
 | Upload fails | The JSON files are saved locally — tell user to run `pnpm upload` manually |
 | Date can't be parsed | Skip that row and report it |
+| Existing insights fetch fails | Log a warning and generate insights from scratch |
 
 ---
 
