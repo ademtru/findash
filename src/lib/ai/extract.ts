@@ -4,7 +4,6 @@ import { ExtractionBatchSchema, type ExtractionBatch } from './schemas'
 import { buildExtractPrompt } from './prompts'
 import { listTransactions, distinctCategories } from '@/db/queries/transactions'
 import {
-  createBatch,
   insertPendingRows,
   setBatchStatus,
   type FileRef,
@@ -32,6 +31,7 @@ export interface CsvPart {
 export type ExtractPart = ImagePart | PdfPart | CsvPart
 
 export interface RunExtractArgs {
+  batchId: string  // existing batch — caller creates it
   kind: ExtractKind
   files: FileRef[]
   parts: ExtractPart[]
@@ -80,7 +80,6 @@ function buildUserContent(
 }
 
 export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult> {
-  const batch = await createBatch(args.kind, args.files)
   try {
     const activeCategories = await distinctCategories()
 
@@ -117,7 +116,7 @@ export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult
         reference,
       )
       return {
-        batchId: batch.id,
+        batchId: args.batchId,
         draft: t,
         suggestedCategory: t.category,
         categoryConfidence: t.confidence ?? null,
@@ -126,16 +125,16 @@ export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult
     })
 
     await insertPendingRows(pendingRows)
-    await setBatchStatus(batch.id, 'review', { model: EXTRACTION_MODEL_ID, rawResponse: extracted })
+    await setBatchStatus(args.batchId, 'review', { model: EXTRACTION_MODEL_ID, rawResponse: extracted })
 
     return {
-      batchId: batch.id,
+      batchId: args.batchId,
       transactions: extracted.transactions,
       warnings: extracted.warnings ?? [],
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)
-    await setBatchStatus(batch.id, 'failed', { error: message })
+    await setBatchStatus(args.batchId, 'failed', { error: message })
     throw err
   }
 }
