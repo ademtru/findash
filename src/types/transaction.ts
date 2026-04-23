@@ -1,5 +1,7 @@
 export type TransactionType = 'income' | 'expense' | 'transfer' | 'investment'
 
+export type TransactionSource = 'manual' | 'screenshot' | 'pdf' | 'csv' | 'migrated'
+
 export interface Transaction {
   id: string
   date: string // ISO date string YYYY-MM-DD
@@ -11,6 +13,7 @@ export interface Transaction {
   ticker?: string | null
   shares?: number | null
   price_per_share?: number | null
+  source?: TransactionSource
 }
 
 export interface TransactionData {

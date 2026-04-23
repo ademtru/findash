@@ -3,12 +3,15 @@ import { StatCard } from '@/components/dashboard/StatCard'
 import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
+import { BudgetStrip } from '@/components/dashboard/BudgetStrip'
 import {
   getTotalIncome, getTotalExpenses, getNetWorth,
   getSavingsRate, groupByCategory, groupByMonth, filterByMonth, getAvailableMonths,
 } from '@/lib/transactions'
 import { format, parseISO } from 'date-fns'
 import { getTransactions } from '@/lib/data'
+import { listAllBudgets } from '@/db/queries/budgets'
+import { currentMonthKey } from '@/lib/budgets'
 
 export default async function OverviewPage({
   searchParams,
@@ -16,7 +19,10 @@ export default async function OverviewPage({
   searchParams: Promise<{ month?: string }>
 }) {
   const { month } = await searchParams
-  const { transactions } = await getTransactions()
+  const [{ transactions }, budgets] = await Promise.all([
+    getTransactions(),
+    listAllBudgets(),
+  ])
 
   const months = getAvailableMonths(transactions)
   const filtered = filterByMonth(transactions, month)
@@ -64,6 +70,12 @@ export default async function OverviewPage({
           accent="violet"
         />
       </div>
+
+      <BudgetStrip
+        budgets={budgets}
+        transactions={transactions}
+        month={month ?? currentMonthKey()}
+      />
 
       <div className={month ? 'grid grid-cols-1' : 'grid md:grid-cols-2 gap-4'}>
         {!month && <CashFlowChart data={cashFlowData} />}

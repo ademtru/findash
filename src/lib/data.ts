@@ -1,33 +1,9 @@
 import { unstable_noStore as noStore } from 'next/cache'
-import type { TransactionData, InsightsData } from '@/types/transaction'
-
-async function fetchPrivateBlob<T>(url: string, fallback: T): Promise<T> {
-  noStore()
-  try {
-    const token = process.env.BLOB_READ_WRITE_TOKEN
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-    })
-    if (!res.ok) return fallback
-    return res.json()
-  } catch {
-    return fallback
-  }
-}
+import type { TransactionData } from '@/types/transaction'
+import { listTransactions } from '@/db/queries/transactions'
 
 export async function getTransactions(): Promise<TransactionData> {
-  const url = process.env.BLOB_URL_TRANSACTIONS
-  if (!url) return { transactions: [] }
-  const raw = await fetchPrivateBlob<unknown>(url, { transactions: [] })
-  // Support both { transactions: [...] } and a bare array [...]
-  if (Array.isArray(raw)) return { transactions: raw }
-  const data = raw as { transactions?: unknown }
-  return { transactions: Array.isArray(data.transactions) ? data.transactions : [] }
-}
-
-export async function getInsights(): Promise<InsightsData> {
-  const url = process.env.BLOB_URL_INSIGHTS
-  if (!url) return { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] }
-  return fetchPrivateBlob(url, { generated_at: '', monthly: [], anomalies: [], trends: [], investments: [] })
+  noStore()
+  const transactions = await listTransactions()
+  return { transactions }
 }

@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/cron/weekly-insights", "schedule": "0 10 * * 0" },
+    { "path": "/api/cron/monthly-insights", "schedule": "0 20 1 * *" }
+  ]
+}

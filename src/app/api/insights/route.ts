@@ -1,18 +1,16 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getInsightByPeriod, listInsights, type Period } from '@/db/queries/insights'
 
-export async function GET() {
-  try {
-    const url = process.env.BLOB_URL_INSIGHTS
-    if (!url) {
-      return NextResponse.json({ generated_at: null, monthly: [], anomalies: [], trends: [], investments: [] })
-    }
-    const response = await fetch(url, { next: { revalidate: 0 } })
-    if (!response.ok) {
-      return NextResponse.json({ generated_at: null, monthly: [], anomalies: [], trends: [], investments: [] })
-    }
-    const data = await response.json()
-    return NextResponse.json(data)
-  } catch {
-    return NextResponse.json({ generated_at: null, monthly: [], anomalies: [], trends: [], investments: [] })
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl
+  const typeRaw = searchParams.get('type')
+  const period = searchParams.get('period')
+  const type: Period = typeRaw === 'monthly' ? 'monthly' : 'weekly'
+
+  if (period) {
+    const row = await getInsightByPeriod(type, period)
+    return NextResponse.json({ insight: row })
   }
+  const rows = await listInsights(type, 24)
+  return NextResponse.json({ insights: rows })
 }

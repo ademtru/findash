@@ -3,13 +3,17 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp,
-  Sparkles, LogOut, CloudUpload,
+  Sparkles, LogOut, CloudUpload, Plus, ScanLine, FileInput, Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const NAV_ITEMS = [
   { href: '/',             label: 'Overview',     icon: LayoutDashboard },
+  { href: '/add',          label: 'Add',          icon: Plus },
+  { href: '/capture',      label: 'Scan',         icon: ScanLine },
+  { href: '/import',       label: 'Import',       icon: FileInput },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { href: '/budgets',      label: 'Budgets',      icon: Wallet },
   { href: '/spending',     label: 'Spending',     icon: PieChart },
   { href: '/investments',  label: 'Investments',  icon: TrendingUp },
   { href: '/insights',     label: 'AI Insights',  icon: Sparkles },

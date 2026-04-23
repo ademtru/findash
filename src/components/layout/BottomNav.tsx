@@ -2,17 +2,15 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard, ArrowLeftRight, PieChart,
-  TrendingUp, Sparkles, CloudUpload,
+  LayoutDashboard, ArrowLeftRight, ScanLine, Sparkles, Plus,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
   { href: '/',             label: 'Home',    icon: LayoutDashboard },
   { href: '/transactions', label: 'Txns',    icon: ArrowLeftRight },
-  { href: '/spending',     label: 'Spend',   icon: PieChart },
-  { href: '/investments',  label: 'Invest',  icon: TrendingUp },
+  { href: '/add',          label: 'Add',     icon: Plus },
+  { href: '/capture',      label: 'Scan',    icon: ScanLine },
   { href: '/insights',     label: 'AI',      icon: Sparkles },
-  { href: '/upload',       label: 'Upload',  icon: CloudUpload },
 ]
 
 export function BottomNav() {
