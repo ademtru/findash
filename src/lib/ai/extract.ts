@@ -1,5 +1,5 @@
 import { generateObject } from 'ai'
-import { MODELS } from './gateway'
+import { MODELS, EXTRACTION_MODEL_ID } from './gateway'
 import { ExtractionBatchSchema, type ExtractionBatch } from './schemas'
 import { buildExtractPrompt } from './prompts'
 import { listTransactions, distinctCategories } from '@/db/queries/transactions'
@@ -60,7 +60,7 @@ function buildReferenceSet(txns: Transaction[], around: string): Transaction[] {
 function buildUserContent(
   textPrompt: string,
   parts: ExtractPart[],
-): { type: 'text'; text: string }[] | Array<{ type: string; [k: string]: unknown }> {
+): Array<{ type: string; [k: string]: unknown }> {
   const content: Array<{ type: string; [k: string]: unknown }> = [
     { type: 'text', text: textPrompt },
   ]
@@ -126,7 +126,7 @@ export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult
     })
 
     await insertPendingRows(pendingRows)
-    await setBatchStatus(batch.id, 'review', { model: 'gemini-2.0-flash', rawResponse: extracted })
+    await setBatchStatus(batch.id, 'review', { model: EXTRACTION_MODEL_ID, rawResponse: extracted })
 
     return {
       batchId: batch.id,
