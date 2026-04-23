@@ -20,26 +20,31 @@ export async function POST(
     return NextResponse.json({ status: batch.status })
   }
 
-  // Reset for pending or failed (retry case)
-  await clearPendingByBatch(batchId)
-  await setBatchStatus(batchId, 'extracting')
-
   const token = process.env.BLOB_READ_WRITE_TOKEN
   if (!token) {
-    await setBatchStatus(batchId, 'failed', { error: 'Storage not configured' })
     return NextResponse.json({ error: 'Storage not configured' }, { status: 500 })
   }
 
-  // Recover assumeYear from rawResponse (stored during upload)
-  const assumeYear =
-    batch.rawResponse &&
-    typeof batch.rawResponse === 'object' &&
-    'assumeYear' in batch.rawResponse &&
-    typeof (batch.rawResponse as { assumeYear?: unknown }).assumeYear === 'number'
-      ? (batch.rawResponse as { assumeYear: number }).assumeYear
-      : new Date().getFullYear()
-
   const fileRefs = batch.fileRefs as FileRef[]
+  if (!Array.isArray(fileRefs) || fileRefs.length === 0) {
+    await setBatchStatus(batchId, 'failed', { error: 'No files found for this batch' })
+    return NextResponse.json({ error: 'No files found for this batch' }, { status: 422 })
+  }
+
+  // Now safe to mutate state
+  await clearPendingByBatch(batchId)
+  await setBatchStatus(batchId, 'extracting')
+
+  // Recover assumeYear from rawResponse (stored during upload)
+  const assumeYear = (() => {
+    const raw = batch.rawResponse
+    if (raw && typeof raw === 'object' && 'assumeYear' in raw && typeof (raw as { assumeYear?: unknown }).assumeYear === 'number') {
+      return (raw as { assumeYear: number }).assumeYear
+    }
+    console.warn(`[run] batchId=${batchId}: assumeYear not found in rawResponse, falling back to current year`)
+    return new Date().getFullYear()
+  })()
+
   const parts: ExtractPart[] = []
 
   // Download each blob and build extract parts
@@ -61,6 +66,11 @@ export async function POST(
     } else {
       parts.push({ kind: 'csv', text: bytes.toString('utf-8'), filename: ref.name })
     }
+  }
+
+  if (parts.length === 0) {
+    await setBatchStatus(batchId, 'failed', { error: 'No extractable content in uploaded files' })
+    return NextResponse.json({ error: 'No extractable content in uploaded files' }, { status: 422 })
   }
 
   try {
