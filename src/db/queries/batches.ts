@@ -101,3 +101,9 @@ export async function markPendingAction(
     .set({ userAction })
     .where(eq(pendingTransactions.id, pendingId))
 }
+
+export async function clearPendingByBatch(batchId: string): Promise<void> {
+  await db
+    .delete(pendingTransactions)
+    .where(eq(pendingTransactions.batchId, batchId))
+}
