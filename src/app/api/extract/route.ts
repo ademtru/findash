@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { put } from '@vercel/blob'
-import { runExtract, type ExtractKind, type ExtractPart } from '@/lib/ai/extract'
-import type { FileRef } from '@/db/queries/batches'
+import { createBatch, setBatchStatus, type FileRef } from '@/db/queries/batches'
 
 export const runtime = 'nodejs'
 export const maxDuration = 120
@@ -89,15 +88,14 @@ export async function POST(request: NextRequest) {
     )
   }
   const only: Classification = classified[0].cls
-  const batchKind: ExtractKind = only === 'image' ? 'screenshot' : only
+  const batchKind = only === 'image' ? 'screenshot' : only
 
   const yearRaw = formData.get('assumeYear') as string | null
   const assumeYear =
     yearRaw && /^\d{4}$/.test(yearRaw) ? Number(yearRaw) : new Date().getFullYear()
 
-  // Upload to Blob + build extract parts
+  // Upload to Blob
   const blobRefs: FileRef[] = []
-  const parts: ExtractPart[] = []
 
   for (const { file, cls } of classified) {
     const mime = file.type || (cls === 'pdf' ? 'application/pdf' : cls === 'csv' ? 'text/csv' : 'application/octet-stream')
@@ -111,27 +109,10 @@ export async function POST(request: NextRequest) {
       addRandomSuffix: true,
     })
     blobRefs.push({ blobUrl: blob.url, name: file.name, mimeType: mime, size: file.size })
-
-    if (cls === 'image') {
-      parts.push({ kind: 'image', bytes, mimeType: mime })
-    } else if (cls === 'pdf') {
-      parts.push({ kind: 'pdf', bytes })
-    } else {
-      parts.push({ kind: 'csv', text: bytes.toString('utf-8'), filename: file.name })
-    }
   }
 
-  try {
-    const result = await runExtract({
-      kind: batchKind,
-      files: blobRefs,
-      parts,
-      assumeYear,
-    })
-    return NextResponse.json(result, { status: 201 })
-  } catch (err) {
-    console.error('extract error', err)
-    const message = err instanceof Error ? err.message : 'Extraction failed'
-    return NextResponse.json({ error: message }, { status: 502 })
-  }
+  const batch = await createBatch(batchKind as 'screenshot' | 'pdf' | 'csv', blobRefs)
+  await setBatchStatus(batch.id, 'pending', { rawResponse: { assumeYear } })
+
+  return NextResponse.json({ batchId: batch.id }, { status: 201 })
 }
