@@ -126,7 +126,7 @@ export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult
     })
 
     await insertPendingRows(pendingRows)
-    await setBatchStatus(batch.id, 'review', { model, rawResponse: extracted })
+    await setBatchStatus(batch.id, 'review', { model: 'gemini-2.0-flash', rawResponse: extracted })
 
     return {
       batchId: batch.id,
