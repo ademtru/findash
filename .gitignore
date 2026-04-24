@@ -43,3 +43,6 @@ next-env.d.ts
 # Financial data — never commit
 transactions.json
 insights.json
+
+# Git worktrees
+.worktrees/
