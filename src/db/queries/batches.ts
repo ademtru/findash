@@ -22,6 +22,7 @@ export async function createBatch(
     .insert(extractionBatches)
     .values({ kind, fileRefs, status: 'extracting' })
     .returning()
+  if (!row) throw new Error(`createBatch: insert returned no row for kind=${kind}`)
   return row
 }
 

@@ -87,20 +87,28 @@ export async function POST(request: NextRequest) {
 
   for (const { file, cls } of classified) {
     const mime = file.type || (cls === 'pdf' ? 'application/pdf' : cls === 'csv' ? 'text/csv' : 'application/octet-stream')
-    const bytes = Buffer.from(await file.arrayBuffer())
-    const stamp = Date.now()
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
-    const blob = await put(`captures/${stamp}-${safeName}`, bytes, {
-      access: 'private',
-      contentType: mime,
-      token,
-      addRandomSuffix: true,
-    })
-    const fileRef: FileRef = { blobUrl: blob.url, name: file.name, mimeType: mime, size: file.size }
-    const batchKind = cls === 'image' ? 'screenshot' : cls
-    const batch = await createBatch(batchKind as 'screenshot' | 'pdf' | 'csv', [fileRef])
-    await setBatchStatus(batch.id, 'pending', { rawResponse: { assumeYear } })
-    batches.push({ batchId: batch.id, name: file.name })
+    try {
+      const bytes = Buffer.from(await file.arrayBuffer())
+      const stamp = Date.now()
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+      const blob = await put(`captures/${stamp}-${safeName}`, bytes, {
+        access: 'private',
+        contentType: mime,
+        token,
+        addRandomSuffix: true,
+      })
+      const fileRef: FileRef = { blobUrl: blob.url, name: file.name, mimeType: mime, size: file.size }
+      const batchKind = cls === 'image' ? 'screenshot' : cls
+      const batch = await createBatch(batchKind as 'screenshot' | 'pdf' | 'csv', [fileRef])
+      await setBatchStatus(batch.id, 'pending', { rawResponse: { assumeYear } })
+      batches.push({ batchId: batch.id, name: file.name })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      return NextResponse.json(
+        { error: `Failed to process "${file.name}": ${message}`, batches },
+        { status: 502 },
+      )
+    }
   }
 
   return NextResponse.json({ batches }, { status: 201 })
