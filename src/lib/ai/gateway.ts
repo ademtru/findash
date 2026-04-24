@@ -1,6 +1,6 @@
 import { google } from '@ai-sdk/google'
 
-export const EXTRACTION_MODEL_ID = 'gemini-2.0-flash'
+export const EXTRACTION_MODEL_ID = 'gemini-2.5-flash'
 
 export const MODELS = {
   categorize: 'anthropic/claude-haiku-4.5',
