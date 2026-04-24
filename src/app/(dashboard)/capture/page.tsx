@@ -5,6 +5,14 @@ import { formatDistanceToNow } from 'date-fns'
 
 export const dynamic = 'force-dynamic'
 
+function batchLabel(b: { kind: string; fileRefs: unknown }): string {
+  if (Array.isArray(b.fileRefs) && b.fileRefs.length > 0) {
+    const name = (b.fileRefs[0] as { name?: string }).name
+    if (name) return name
+  }
+  return b.kind === 'screenshot' ? 'Screenshot' : b.kind.toUpperCase()
+}
+
 export default async function CapturePage() {
   const recent = await listRecentBatches(10)
 
@@ -34,8 +42,8 @@ export default async function CapturePage() {
                 className="flex items-center justify-between px-4 py-3 hover:bg-[rgba(255,255,255,0.02)] transition-colors"
               >
                 <div>
-                  <p className="text-[14px] text-white">
-                    {b.kind === 'screenshot' ? 'Screenshot' : b.kind.toUpperCase()} batch
+                  <p className="text-[14px] text-white truncate max-w-[200px]">
+                    {batchLabel(b)}
                   </p>
                   <p className="text-[12px]" style={{ color: 'rgba(235,235,245,0.45)' }}>
                     {formatDistanceToNow(b.createdAt, { addSuffix: true })}
