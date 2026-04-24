@@ -61,7 +61,6 @@ export async function POST(request: NextRequest) {
 
   // Classify + validate all files
   const classified: { file: File; cls: Classification }[] = []
-  const kinds = new Set<Classification>()
   for (const file of files) {
     const cls = classify(file)
     if (!cls) {
@@ -78,24 +77,13 @@ export async function POST(request: NextRequest) {
       )
     }
     classified.push({ file, cls })
-    kinds.add(cls)
   }
-
-  if (kinds.size > 1) {
-    return NextResponse.json(
-      { error: 'Mix of file types in one batch is not supported. Upload images, PDFs, or CSVs separately.' },
-      { status: 400 },
-    )
-  }
-  const only: Classification = classified[0].cls
-  const batchKind = only === 'image' ? 'screenshot' : only
 
   const yearRaw = formData.get('assumeYear') as string | null
   const assumeYear =
     yearRaw && /^\d{4}$/.test(yearRaw) ? Number(yearRaw) : new Date().getFullYear()
 
-  // Upload to Blob
-  const blobRefs: FileRef[] = []
+  const batches: { batchId: string; name: string }[] = []
 
   for (const { file, cls } of classified) {
     const mime = file.type || (cls === 'pdf' ? 'application/pdf' : cls === 'csv' ? 'text/csv' : 'application/octet-stream')
@@ -108,11 +96,12 @@ export async function POST(request: NextRequest) {
       token,
       addRandomSuffix: true,
     })
-    blobRefs.push({ blobUrl: blob.url, name: file.name, mimeType: mime, size: file.size })
+    const fileRef: FileRef = { blobUrl: blob.url, name: file.name, mimeType: mime, size: file.size }
+    const batchKind = cls === 'image' ? 'screenshot' : cls
+    const batch = await createBatch(batchKind as 'screenshot' | 'pdf' | 'csv', [fileRef])
+    await setBatchStatus(batch.id, 'pending', { rawResponse: { assumeYear } })
+    batches.push({ batchId: batch.id, name: file.name })
   }
 
-  const batch = await createBatch(batchKind as 'screenshot' | 'pdf' | 'csv', blobRefs)
-  await setBatchStatus(batch.id, 'pending', { rawResponse: { assumeYear } })
-
-  return NextResponse.json({ batchId: batch.id }, { status: 201 })
+  return NextResponse.json({ batches }, { status: 201 })
 }
