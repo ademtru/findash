@@ -1,3 +1,4 @@
+import { after } from 'next/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { getBatch, setBatchStatus, clearPendingByBatch } from '@/db/queries/batches'
 import { runExtract } from '@/lib/ai/extract'
@@ -5,7 +6,7 @@ import type { ExtractPart } from '@/lib/ai/extract'
 import type { FileRef } from '@/db/queries/batches'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60
+export const maxDuration = 300
 
 export async function POST(
   _request: NextRequest,
@@ -74,7 +75,9 @@ export async function POST(
     return NextResponse.json({ error: 'No extractable content in uploaded files' }, { status: 422 })
   }
 
-  try {
+  // Fire extraction in background so the response returns immediately.
+  // The client polls /api/extract/:batchId for status updates.
+  after(async () => {
     await runExtract({
       batchId,
       kind: batch.kind as 'screenshot' | 'pdf' | 'csv',
@@ -82,10 +85,7 @@ export async function POST(
       parts,
       assumeYear,
     })
-    return NextResponse.json({ status: 'review' })
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err)
-    // setBatchStatus to failed is already handled inside runExtract on error
-    return NextResponse.json({ error: message }, { status: 502 })
-  }
+  })
+
+  return NextResponse.json({ status: 'extracting' })
 }

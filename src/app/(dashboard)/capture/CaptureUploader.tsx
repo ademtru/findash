@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, FileText, ImagePlus, Loader2, X } from 'lucide-react'
 import { fetchJson } from '@/lib/fetch-json'
@@ -10,7 +10,7 @@ export function CaptureUploader() {
   const [files, setFiles] = useState<File[]>([])
   const [assumeYear, setAssumeYear] = useState(String(new Date().getFullYear()))
   const [uploading, setUploading] = useState(false)
-  const [queue, setQueue] = useState<{ current: number; total: number; name: string } | null>(null)
+  const [queue, setQueue] = useState<{ current: number; total: number; name: string; startedAt: number } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
   const libraryRef = useRef<HTMLInputElement>(null)
@@ -57,7 +57,7 @@ export function CaptureUploader() {
     const failedNames: string[] = []
     for (let i = 0; i < batches.length; i++) {
       const { batchId, name } = batches[i]
-      setQueue({ current: i + 1, total: batches.length, name })
+      setQueue({ current: i + 1, total: batches.length, name, startedAt: Date.now() })
 
       const { ok: runOk, error: runErr } = await fetchJson(`/api/extract/${batchId}/run`, { method: 'POST' })
       if (!runOk) {
@@ -109,15 +109,7 @@ export function CaptureUploader() {
           </p>
         </div>
       ) : queue ? (
-        <div className="flex flex-col items-center gap-3 py-6">
-          <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#0a84ff' }} />
-          <p className="text-[14px] font-medium text-white">
-            Extracting {queue.current} of {queue.total}
-          </p>
-          <p className="text-[13px] text-center truncate max-w-full px-4" style={{ color: 'rgba(235,235,245,0.55)' }}>
-            {queue.name}
-          </p>
-        </div>
+        <ExtractionProgress queue={queue} />
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3">
@@ -223,6 +215,60 @@ export function CaptureUploader() {
           </button>
         </>
       )}
+    </div>
+  )
+}
+
+function ExtractionProgress({
+  queue,
+}: {
+  queue: { current: number; total: number; name: string; startedAt: number }
+}) {
+  const [elapsed, setElapsed] = useState(0)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    setElapsed(0)
+    setProgress(0)
+    const interval = setInterval(() => {
+      setElapsed((s) => s + 1)
+      // Ease toward 90% asymptotically — never reaches 100% until actually done
+      setProgress((p) => p + (90 - p) * 0.04)
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [queue.current])
+
+  const mins = Math.floor(elapsed / 60)
+  const secs = elapsed % 60
+  const elapsedLabel = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`
+
+  return (
+    <div className="py-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[14px] font-medium text-white">
+          Extracting {queue.current} of {queue.total}
+        </p>
+        <p className="text-[13px] tabular-nums" style={{ color: 'rgba(235,235,245,0.4)' }}>
+          {elapsedLabel}
+        </p>
+      </div>
+
+      <div
+        className="w-full rounded-full overflow-hidden"
+        style={{ height: 4, background: 'rgba(120,120,128,0.2)' }}
+      >
+        <div
+          className="h-full rounded-full transition-all duration-1000 ease-out"
+          style={{
+            width: `${progress}%`,
+            background: 'linear-gradient(90deg, #0a84ff, #bf5af2)',
+          }}
+        />
+      </div>
+
+      <p className="text-[13px] truncate" style={{ color: 'rgba(235,235,245,0.5)' }}>
+        {queue.name}
+      </p>
     </div>
   )
 }

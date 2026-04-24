@@ -9,7 +9,8 @@ import {
   type FileRef,
 } from '@/db/queries/batches'
 import { findFuzzyDuplicate } from '@/lib/transactions/dedup'
-import { isOwnAccountTransfer } from '@/lib/transactions/own-transfer'
+import { checkOwnAccountTransfer } from '@/lib/transactions/own-transfer'
+import { listAccounts } from '@/db/queries/accounts'
 import type { Transaction } from '@/types/transaction'
 
 export type ExtractKind = 'screenshot' | 'pdf' | 'csv'
@@ -109,26 +110,24 @@ export async function runExtract(args: RunExtractArgs): Promise<RunExtractResult
 
     const extracted = result.object
 
-    const existing = await listTransactions()
-    const pendingRows = await Promise.all(
-      extracted.transactions.map(async (t) => {
-        const reference = buildReferenceSet(existing, t.date)
-        const dupe = findFuzzyDuplicate(
-          { date: t.date, amount: t.amount, description: t.description },
-          reference,
-        )
-        const ownTransfer =
-          t.type === 'transfer' ? await isOwnAccountTransfer(t.description) : false
-        return {
-          batchId: args.batchId,
-          draft: t,
-          suggestedCategory: t.category,
-          categoryConfidence: t.confidence ?? null,
-          duplicateOf: dupe?.id ?? null,
-          isOwnTransfer: ownTransfer,
-        }
-      }),
-    )
+    const [existing, ownAccounts] = await Promise.all([listTransactions(), listAccounts()])
+    const pendingRows = extracted.transactions.map((t) => {
+      const reference = buildReferenceSet(existing, t.date)
+      const dupe = findFuzzyDuplicate(
+        { date: t.date, amount: t.amount, description: t.description },
+        reference,
+      )
+      const ownTransfer =
+        t.type === 'transfer' ? checkOwnAccountTransfer(t.description, ownAccounts) : false
+      return {
+        batchId: args.batchId,
+        draft: t,
+        suggestedCategory: t.category,
+        categoryConfidence: t.confidence ?? null,
+        duplicateOf: dupe?.id ?? null,
+        isOwnTransfer: ownTransfer,
+      }
+    })
 
     await insertPendingRows(pendingRows)
     await setBatchStatus(args.batchId, 'review', { model: EXTRACTION_MODEL_ID, rawResponse: extracted })
