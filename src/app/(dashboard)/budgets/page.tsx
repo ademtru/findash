@@ -38,8 +38,18 @@ export default async function BudgetsPage({
     ...spendMap.keys(),
   ])
 
-  // Group transactions by category for drill-down
+  // Map groupId → the expense transaction's category (for routing non-expense group members)
+  const groupExpenseCategoryMap = new Map<string, string>()
+  for (const t of txns) {
+    if (t.type === 'expense' && t.groupId) {
+      groupExpenseCategoryMap.set(t.groupId, t.category)
+    }
+  }
+
+  // Build drill-down: expenses as primary rows, non-expense group members as sub-rows directly after their primary
   const txnsByCategory = new Map<string, CategoryTransaction[]>()
+
+  // First pass: add all expense transactions as primary rows
   for (const t of txns) {
     if (t.type !== 'expense') continue
     const list = txnsByCategory.get(t.category) ?? []
@@ -48,11 +58,44 @@ export default async function BudgetsPage({
       date: t.date,
       description: t.description,
       amount: t.amount,
+      groupId: t.groupId ?? null,
+      isSubRow: false,
     })
     txnsByCategory.set(t.category, list)
   }
+
+  // Sort each category's expense rows by date descending
   for (const list of txnsByCategory.values()) {
     list.sort((a, b) => b.date.localeCompare(a.date))
+  }
+
+  // Second pass: insert non-expense group members as sub-rows immediately after their primary expense
+  for (const t of txns) {
+    if (t.type === 'expense') continue
+    if (!t.groupId || !groupExpenseCategoryMap.has(t.groupId)) continue
+    const targetCategory = groupExpenseCategoryMap.get(t.groupId)!
+    const list = txnsByCategory.get(targetCategory)
+    if (!list) continue
+    // Find the index of the primary expense for this group
+    const primaryIdx = list.findIndex((row) => row.groupId === t.groupId && !row.isSubRow)
+    const subRow: CategoryTransaction = {
+      id: t.id,
+      date: t.date,
+      description: t.description,
+      amount: t.amount,
+      groupId: t.groupId,
+      isSubRow: true,
+    }
+    if (primaryIdx !== -1) {
+      // Insert sub-row right after the primary (and any already-inserted sub-rows for this group)
+      let insertAt = primaryIdx + 1
+      while (insertAt < list.length && list[insertAt].isSubRow && list[insertAt].groupId === t.groupId) {
+        insertAt++
+      }
+      list.splice(insertAt, 0, subRow)
+    } else {
+      list.push(subRow)
+    }
   }
 
   const categories: BudgetCategoryView[] = Array.from(categoryUniverse)

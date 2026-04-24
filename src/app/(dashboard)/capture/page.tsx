@@ -11,20 +11,13 @@ export default async function CapturePage() {
   return (
     <div className="px-4 py-5 md:px-6 md:py-6 max-w-xl mx-auto space-y-6">
       <div>
-        <h1 className="text-[28px] font-bold text-white tracking-tight">Capture</h1>
+        <h1 className="text-[28px] font-bold text-white tracking-tight">Scan</h1>
         <p className="text-[14px] mt-1" style={{ color: 'rgba(235,235,245,0.55)' }}>
-          Snap a screenshot of your banking app. AI extracts the transactions — you review and commit.
+          Take a screenshot of your banking app, or import a PDF statement or CSV export. AI extracts the transactions — you review and commit.
         </p>
       </div>
 
       <CaptureUploader />
-
-      <p className="text-[13px]" style={{ color: 'rgba(235,235,245,0.5)' }}>
-        Importing a bank statement PDF or CSV?{' '}
-        <Link href="/import" className="font-medium" style={{ color: '#0a84ff' }}>
-          Go to Import →
-        </Link>
-      </p>
 
       {recent.length > 0 && (
         <div>

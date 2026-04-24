@@ -11,6 +11,8 @@ export interface CategoryTransaction {
   date: string
   description: string
   amount: number
+  groupId?: string | null
+  isSubRow?: boolean
 }
 
 export interface BudgetCategoryView {
@@ -202,86 +204,89 @@ function CategoryRow({
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={onToggleExpand}
-        disabled={!hasTransactions}
-        className="w-full text-left px-4 py-3 disabled:cursor-default"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <p className="text-[15px] font-medium text-white truncate">{cat.category}</p>
-              {hasTransactions && (
-                <ChevronDown
-                  className="h-3.5 w-3.5 shrink-0 transition-transform"
-                  style={{
-                    color: 'rgba(235,235,245,0.4)',
-                    transform: expanded ? 'rotate(180deg)' : undefined,
-                  }}
-                />
-              )}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={onToggleExpand}
+          disabled={!hasTransactions}
+          className="w-full text-left px-4 py-3 pr-28 disabled:cursor-default"
+        >
+          <div className="flex items-start gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <p className="text-[15px] font-medium text-white truncate">{cat.category}</p>
+                {hasTransactions && (
+                  <ChevronDown
+                    className="h-3.5 w-3.5 shrink-0 transition-transform"
+                    style={{
+                      color: 'rgba(235,235,245,0.4)',
+                      transform: expanded ? 'rotate(180deg)' : undefined,
+                    }}
+                  />
+                )}
+              </div>
+              <p className="text-[12px] mt-0.5" style={{ color: 'rgba(235,235,245,0.5)' }}>
+                ${cat.spent.toFixed(0)}
+                {hasCap && ` of $${capDollars.toFixed(0)}`}
+                {pace?.status === 'over' && hasCap && (
+                  <span className="ml-2" style={{ color: '#ff453a' }}>over</span>
+                )}
+                {pace?.status === 'under' && hasCap && (
+                  <span className="ml-2" style={{ color: '#30d158' }}>under pace</span>
+                )}
+                {!hasCap && (
+                  <span className="ml-2" style={{ color: 'rgba(235,235,245,0.4)' }}>no cap</span>
+                )}
+                {hasTransactions && (
+                  <span className="ml-2" style={{ color: 'rgba(235,235,245,0.35)' }}>
+                    · {cat.transactions.length} txn{cat.transactions.length === 1 ? '' : 's'}
+                  </span>
+                )}
+              </p>
             </div>
-            <p className="text-[12px] mt-0.5" style={{ color: 'rgba(235,235,245,0.5)' }}>
-              ${cat.spent.toFixed(0)}
-              {hasCap && ` of $${capDollars.toFixed(0)}`}
-              {pace?.status === 'over' && hasCap && (
-                <span className="ml-2" style={{ color: '#ff453a' }}>over</span>
-              )}
-              {pace?.status === 'under' && hasCap && (
-                <span className="ml-2" style={{ color: '#30d158' }}>under pace</span>
-              )}
-              {!hasCap && (
-                <span className="ml-2" style={{ color: 'rgba(235,235,245,0.4)' }}>no cap</span>
-              )}
-              {hasTransactions && (
-                <span className="ml-2" style={{ color: 'rgba(235,235,245,0.35)' }}>
-                  · {cat.transactions.length} txn{cat.transactions.length === 1 ? '' : 's'}
-                </span>
-              )}
-            </p>
           </div>
-          {!editing && (
-            <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-              <button
-                type="button"
-                onClick={onBeginEdit}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[12px] font-medium"
-                style={{
-                  background: hasCap ? 'rgba(120,120,128,0.16)' : 'rgba(10,132,255,0.14)',
-                  color: hasCap ? 'rgba(235,235,245,0.8)' : '#0a84ff',
-                }}
-              >
-                <Pencil className="h-3 w-3" />
-                {hasCap ? 'Edit' : 'Set cap'}
-              </button>
-              {cat.monthBudgetId && (
-                <button
-                  type="button"
-                  onClick={onRemove}
-                  className="p-1 rounded-md"
-                  style={{ color: 'rgba(235,235,245,0.5)' }}
-                  aria-label="Delete"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              )}
+
+          {hasCap && !editing && (
+            <div
+              className="mt-2 h-1.5 rounded-full overflow-hidden"
+              style={{ background: 'rgba(120,120,128,0.2)' }}
+            >
+              <div
+                className="h-full transition-all"
+                style={{ width: `${pctWidth}%`, background: barColor }}
+              />
             </div>
           )}
-        </div>
+        </button>
 
-        {hasCap && !editing && (
-          <div
-            className="mt-2 h-1.5 rounded-full overflow-hidden"
-            style={{ background: 'rgba(120,120,128,0.2)' }}
-          >
-            <div
-              className="h-full transition-all"
-              style={{ width: `${pctWidth}%`, background: barColor }}
-            />
+        {!editing && (
+          <div className="absolute top-3 right-4 flex items-center gap-1">
+            <button
+              type="button"
+              onClick={onBeginEdit}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[12px] font-medium"
+              style={{
+                background: hasCap ? 'rgba(120,120,128,0.16)' : 'rgba(10,132,255,0.14)',
+                color: hasCap ? 'rgba(235,235,245,0.8)' : '#0a84ff',
+              }}
+            >
+              <Pencil className="h-3 w-3" />
+              {hasCap ? 'Edit' : 'Set cap'}
+            </button>
+            {cat.monthBudgetId && (
+              <button
+                type="button"
+                onClick={onRemove}
+                className="p-1 rounded-md"
+                style={{ color: 'rgba(235,235,245,0.5)' }}
+                aria-label="Delete"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         )}
-      </button>
+      </div>
 
       {editing && (
         <div className="px-4 pb-3 flex items-center gap-2">
@@ -332,16 +337,33 @@ function CategoryRow({
             <div
               key={t.id}
               className="flex items-center justify-between gap-3 py-1.5"
+              style={t.isSubRow ? { paddingLeft: '16px', borderTop: '0.5px solid rgba(255,204,0,0.15)' } : undefined}
             >
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] text-white truncate">{t.description}</p>
-                <p className="text-[11px]" style={{ color: 'rgba(235,235,245,0.45)' }}>
+                <div className="flex items-center gap-1.5">
+                  {t.isSubRow && (
+                    <span className="shrink-0 text-[11px]" style={{ color: 'rgba(255,204,0,0.5)' }}>↳</span>
+                  )}
+                  <p
+                    className="truncate"
+                    style={{
+                      fontSize: t.isSubRow ? '12px' : '13px',
+                      color: t.isSubRow ? 'rgba(235,235,245,0.6)' : '#fff',
+                    }}
+                  >
+                    {t.description}
+                  </p>
+                </div>
+                <p className="text-[11px]" style={{ color: 'rgba(235,235,245,0.45)', paddingLeft: t.isSubRow ? '14px' : undefined }}>
                   {t.date}
                 </p>
               </div>
               <p
-                className="text-[13px] font-semibold tabular-nums shrink-0"
-                style={{ color: t.amount >= 0 ? '#30d158' : '#fff' }}
+                className="font-semibold tabular-nums shrink-0"
+                style={{
+                  fontSize: t.isSubRow ? '12px' : '13px',
+                  color: t.amount >= 0 ? '#30d158' : (t.isSubRow ? 'rgba(235,235,245,0.6)' : '#fff'),
+                }}
               >
                 {t.amount >= 0 ? '+' : '−'}${Math.abs(t.amount).toFixed(2)}
               </p>

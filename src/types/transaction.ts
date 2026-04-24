@@ -14,6 +14,7 @@ export interface Transaction {
   shares?: number | null
   price_per_share?: number | null
   source?: TransactionSource
+  groupId?: string | null
 }
 
 export interface TransactionData {

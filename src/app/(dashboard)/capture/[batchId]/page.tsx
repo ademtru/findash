@@ -66,7 +66,7 @@ export default async function CaptureBatchPage({
           style={{ color: 'rgba(235,235,245,0.55)' }}
         >
           <ChevronLeft className="h-4 w-4" />
-          Capture
+          Scan
         </Link>
       </div>
 

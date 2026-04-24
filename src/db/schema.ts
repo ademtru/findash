@@ -28,6 +28,7 @@ export const transactions = pgTable(
     pricePerShare: numeric('price_per_share', { precision: 14, scale: 4 }),
     source: text('source').notNull().default('manual'),
     sourceBatchId: uuid('source_batch_id'),
+    groupId: uuid('group_id'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -35,6 +36,7 @@ export const transactions = pgTable(
     index('idx_transactions_date').on(t.date.desc()),
     index('idx_transactions_category').on(t.category),
     index('idx_transactions_type').on(t.type),
+    index('idx_transactions_group').on(t.groupId),
   ],
 )
 

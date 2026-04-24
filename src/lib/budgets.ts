@@ -12,12 +12,36 @@ export function getMonthSpendByCategory(
   txns: Transaction[],
   month: string,
 ): Map<string, number> {
+  const monthTxns = txns.filter(t => t.date.startsWith(month))
+
+  // Pre-compute per-group nets and total expense amounts (for proportional distribution)
+  const groupNet = new Map<string, number>()
+  const groupExpenseTotal = new Map<string, number>()
+  for (const t of monthTxns) {
+    if (!t.groupId) continue
+    groupNet.set(t.groupId, (groupNet.get(t.groupId) ?? 0) + t.amount)
+    if (t.type === 'expense') {
+      groupExpenseTotal.set(t.groupId, (groupExpenseTotal.get(t.groupId) ?? 0) + Math.abs(t.amount))
+    }
+  }
+
   const out = new Map<string, number>()
-  for (const t of txns) {
-    if (!t.date.startsWith(month)) continue
+  for (const t of monthTxns) {
     if (t.type !== 'expense') continue
-    const spent = Math.abs(t.amount)
-    out.set(t.category, (out.get(t.category) ?? 0) + spent)
+
+    let contribution: number
+    if (!t.groupId) {
+      contribution = Math.abs(t.amount)
+    } else {
+      const net = groupNet.get(t.groupId) ?? t.amount
+      if (net >= 0) continue // group fully reimbursed or net gain
+      const totalExpenses = groupExpenseTotal.get(t.groupId) ?? Math.abs(t.amount)
+      contribution = totalExpenses > 0
+        ? (Math.abs(t.amount) / totalExpenses) * Math.abs(net)
+        : 0
+    }
+
+    out.set(t.category, (out.get(t.category) ?? 0) + contribution)
   }
   return out
 }

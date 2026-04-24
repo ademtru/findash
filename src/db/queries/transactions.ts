@@ -1,7 +1,7 @@
 import { db } from '@/db/client'
 import { transactions, type NewTransactionRow, type TransactionRow } from '@/db/schema'
 import type { Transaction } from '@/types/transaction'
-import { and, desc, eq, gte, lt, sql } from 'drizzle-orm'
+import { and, desc, eq, gte, inArray, isNotNull, lt, sql } from 'drizzle-orm'
 
 function rowToTransaction(r: TransactionRow): Transaction {
   return {
@@ -15,6 +15,7 @@ function rowToTransaction(r: TransactionRow): Transaction {
     ticker: r.ticker ?? null,
     shares: r.shares === null ? null : Number(r.shares),
     price_per_share: r.pricePerShare === null ? null : Number(r.pricePerShare),
+    groupId: r.groupId ?? null,
   }
 }
 
@@ -84,6 +85,22 @@ export async function deleteTransaction(id: string): Promise<boolean> {
     .where(eq(transactions.id, id))
     .returning({ id: transactions.id })
   return rows.length > 0
+}
+
+export async function combineTransactions(ids: string[]): Promise<string> {
+  const groupId = crypto.randomUUID()
+  await db
+    .update(transactions)
+    .set({ groupId, updatedAt: new Date() })
+    .where(inArray(transactions.id, ids))
+  return groupId
+}
+
+export async function uncombineGroup(groupId: string): Promise<void> {
+  await db
+    .update(transactions)
+    .set({ groupId: null, updatedAt: new Date() })
+    .where(eq(transactions.groupId, groupId))
 }
 
 export async function updateTransaction(
