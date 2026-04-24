@@ -13,12 +13,12 @@ if (!url) {
 const sql = neon(url)
 
 async function run() {
-  console.log('dropping all public tables...')
+  console.log('truncating all public tables...')
   await sql.query(`
     DO $$ DECLARE r record;
     BEGIN
       FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
-        EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
+        EXECUTE 'TRUNCATE TABLE public.' || quote_ident(r.tablename) || ' CASCADE';
       END LOOP;
     END $$;
   `)
