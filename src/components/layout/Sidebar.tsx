@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp,
-  Sparkles, LogOut, Plus, ScanLine, Wallet,
+  Sparkles, LogOut, Plus, ScanLine, Wallet, Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -73,15 +73,18 @@ export function Sidebar() {
 
       <div className="h-px my-3" style={{ background: 'rgba(84,84,88,0.35)' }} />
 
-      {/* Sign out */}
-      <button
-        onClick={handleLogout}
-        className="flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-[14px] font-medium transition-all duration-150 cursor-pointer w-full hover:bg-[rgba(255,255,255,0.06)]"
-        style={{ color: 'rgba(235,235,245,0.4)' }}
-      >
-        <LogOut className="h-[17px] w-[17px] shrink-0" />
-        Sign Out
-      </button>
+      <div className="space-y-[2px]">
+        <NavItem href="/settings" label="Settings" icon={Settings} />
+        {/* Sign out */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2.5 px-3 py-[9px] rounded-lg text-[14px] font-medium transition-all duration-150 cursor-pointer w-full hover:bg-[rgba(255,255,255,0.06)]"
+          style={{ color: 'rgba(235,235,245,0.4)' }}
+        >
+          <LogOut className="h-[17px] w-[17px] shrink-0" />
+          Sign Out
+        </button>
+      </div>
     </aside>
   )
 }

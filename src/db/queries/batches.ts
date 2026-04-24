@@ -67,6 +67,7 @@ export async function insertPendingRows(
     suggestedCategory: string | null
     categoryConfidence: number | null
     duplicateOf: string | null
+    isOwnTransfer: boolean
   }[],
 ): Promise<PendingTransactionRow[]> {
   if (rows.length === 0) return []
@@ -80,6 +81,7 @@ export async function insertPendingRows(
         categoryConfidence:
           r.categoryConfidence === null ? null : String(r.categoryConfidence),
         duplicateOf: r.duplicateOf,
+        isOwnTransfer: r.isOwnTransfer,
       })),
     )
     .returning()

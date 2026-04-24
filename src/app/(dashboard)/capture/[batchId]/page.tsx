@@ -35,6 +35,7 @@ export default async function CaptureBatchPage({
       id: p.id,
       draft,
       duplicateOf: p.duplicateOf,
+      isOwnTransfer: p.isOwnTransfer ?? false,
       userAction: p.userAction as PendingItem['userAction'],
       confidence:
         p.categoryConfidence === null ? null : Number(p.categoryConfidence),
@@ -76,6 +77,8 @@ export default async function CaptureBatchPage({
           {items.length} transactions extracted
           {items.filter((i) => i.duplicateOf).length > 0 &&
             ` — ${items.filter((i) => i.duplicateOf).length} already exist`}
+          {items.filter((i) => i.isOwnTransfer && !i.duplicateOf).length > 0 &&
+            ` — ${items.filter((i) => i.isOwnTransfer && !i.duplicateOf).length} own account transfers`}
         </p>
       </div>
 

@@ -103,6 +103,7 @@ export const pendingTransactions = pgTable(
     suggestedCategory: text('suggested_category'),
     categoryConfidence: numeric('category_confidence', { precision: 3, scale: 2 }),
     duplicateOf: text('duplicate_of').references(() => transactions.id),
+    isOwnTransfer: boolean('is_own_transfer').notNull().default(false),
     userAction: text('user_action'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -127,6 +128,17 @@ export const appSettings = pgTable('app_settings', {
   key: text('key').primaryKey(),
   value: jsonb('value').notNull(),
 })
+
+export const accounts = pgTable('accounts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  name: text('name').notNull(),
+  institution: text('institution'),
+  last4: char('last4', { length: 4 }).notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+})
+
+export type AccountRow = typeof accounts.$inferSelect
+export type NewAccountRow = typeof accounts.$inferInsert
 
 export type TransactionRow = typeof transactions.$inferSelect
 export type NewTransactionRow = typeof transactions.$inferInsert

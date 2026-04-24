@@ -11,6 +11,7 @@ export interface PendingItem {
   id: string
   draft: ExtractedTransaction
   duplicateOf: string | null
+  isOwnTransfer: boolean
   userAction: 'accept' | 'edit' | 'skip' | null
   confidence: number | null
 }
@@ -32,7 +33,7 @@ export function ReviewGrid({
   const [edits, setEdits] = useState<Record<string, Partial<ExtractedTransaction>>>({})
   const [decisions, setDecisions] = useState<Record<string, Decision>>(() => {
     const out: Record<string, Decision> = {}
-    for (const it of items) out[it.id] = it.duplicateOf ? 'skip' : 'accept'
+    for (const it of items) out[it.id] = (it.duplicateOf || it.isOwnTransfer) ? 'skip' : 'accept'
     return out
   })
   const [submitting, setSubmitting] = useState(false)
@@ -193,6 +194,14 @@ function PendingCard({
               >
                 <AlertTriangle className="h-3 w-3" />
                 duplicate
+              </span>
+            )}
+            {item.isOwnTransfer && !dupe && (
+              <span
+                className="inline-flex px-2 py-0.5 rounded-full text-[11px]"
+                style={{ background: 'rgba(120,120,128,0.18)', color: 'rgba(235,235,245,0.5)' }}
+              >
+                own account
               </span>
             )}
           </div>

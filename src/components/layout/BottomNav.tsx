@@ -2,15 +2,16 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard, ArrowLeftRight, ScanLine, Sparkles, Plus,
+  LayoutDashboard, ArrowLeftRight, ScanLine, Sparkles, Plus, Settings,
 } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { href: '/',             label: 'Home',    icon: LayoutDashboard },
-  { href: '/transactions', label: 'Txns',    icon: ArrowLeftRight },
-  { href: '/add',          label: 'Add',     icon: Plus },
-  { href: '/capture',      label: 'Scan',    icon: ScanLine },
-  { href: '/insights',     label: 'AI',      icon: Sparkles },
+  { href: '/',             label: 'Home',     icon: LayoutDashboard },
+  { href: '/transactions', label: 'Txns',     icon: ArrowLeftRight },
+  { href: '/add',          label: 'Add',      icon: Plus },
+  { href: '/capture',      label: 'Scan',     icon: ScanLine },
+  { href: '/insights',     label: 'AI',       icon: Sparkles },
+  { href: '/settings',     label: 'Settings', icon: Settings },
 ]
 
 export function BottomNav() {
