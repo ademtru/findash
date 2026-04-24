@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp,
-  Sparkles, LogOut, CloudUpload, Plus, ScanLine, FileInput, Wallet,
+  Sparkles, LogOut, Plus, ScanLine, Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { href: '/',             label: 'Overview',     icon: LayoutDashboard },
   { href: '/add',          label: 'Add',          icon: Plus },
   { href: '/capture',      label: 'Scan',         icon: ScanLine },
-  { href: '/import',       label: 'Import',       icon: FileInput },
   { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
   { href: '/budgets',      label: 'Budgets',      icon: Wallet },
   { href: '/spending',     label: 'Spending',     icon: PieChart },
@@ -19,9 +18,6 @@ const NAV_ITEMS = [
   { href: '/insights',     label: 'AI Insights',  icon: Sparkles },
 ]
 
-const UTILITY_ITEMS = [
-  { href: '/upload', label: 'Upload Data', icon: CloudUpload },
-]
 
 function NavItem({
   href, label, icon: Icon,
@@ -74,17 +70,6 @@ export function Sidebar() {
       <nav className="flex-1 space-y-[2px]">
         {NAV_ITEMS.map(item => <NavItem key={item.href} {...item} />)}
       </nav>
-
-      {/* Utility section */}
-      <div className="space-y-[2px] mt-4">
-        <p
-          className="px-3 text-[11px] font-semibold uppercase tracking-wider mb-1.5"
-          style={{ color: 'rgba(235,235,245,0.3)' }}
-        >
-          Data
-        </p>
-        {UTILITY_ITEMS.map(item => <NavItem key={item.href} {...item} />)}
-      </div>
 
       <div className="h-px my-3" style={{ background: 'rgba(84,84,88,0.35)' }} />
 
