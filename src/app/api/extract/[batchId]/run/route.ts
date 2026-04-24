@@ -15,8 +15,9 @@ export async function POST(
   const batch = await getBatch(batchId)
   if (!batch) return NextResponse.json({ error: 'Batch not found' }, { status: 404 })
 
-  // Idempotency: skip if already running or done
-  if (batch.status === 'extracting' || batch.status === 'review' || batch.status === 'committed') {
+  // Idempotency: skip if already successfully done
+  // Note: 'extracting' is NOT guarded — allows recovering batches stuck by a timeout
+  if (batch.status === 'review' || batch.status === 'committed') {
     return NextResponse.json({ status: batch.status })
   }
 
