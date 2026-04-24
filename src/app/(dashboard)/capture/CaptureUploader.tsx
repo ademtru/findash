@@ -9,7 +9,8 @@ export function CaptureUploader() {
   const router = useRouter()
   const [files, setFiles] = useState<File[]>([])
   const [assumeYear, setAssumeYear] = useState(String(new Date().getFullYear()))
-  const [busy, setBusy] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [queue, setQueue] = useState<{ current: number; total: number; name: string } | null>(null)
   const [error, setError] = useState<string | null>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
   const libraryRef = useRef<HTMLInputElement>(null)
@@ -31,33 +32,71 @@ export function CaptureUploader() {
   async function submit() {
     setError(null)
     if (files.length === 0) {
-      setError('Add at least one screenshot')
+      setError('Add at least one file')
       return
     }
-    setBusy(true)
+    setUploading(true)
+
     const fd = new FormData()
     for (const f of files) fd.append('files', f)
     if (assumeYear) fd.append('assumeYear', assumeYear)
 
-    const { ok, data, error: err } = await fetchJson<{ batchId: string }>('/api/extract', {
+    const { ok, data, error: err } = await fetchJson<{ batches: { batchId: string; name: string }[] }>('/api/extract', {
       method: 'POST',
       body: fd,
     })
-    if (!ok || !data?.batchId) {
-      setError(err ?? 'Extraction failed')
-      setBusy(false)
+    if (!ok || !data?.batches?.length) {
+      setError(err ?? 'Upload failed')
+      setUploading(false)
       return
     }
-    router.push(`/capture/${data.batchId}`)
+
+    setUploading(false)
+
+    const { batches } = data
+    for (let i = 0; i < batches.length; i++) {
+      const { batchId, name } = batches[i]
+      setQueue({ current: i + 1, total: batches.length, name })
+
+      await fetchJson(`/api/extract/${batchId}/run`, { method: 'POST' })
+
+      let done = false
+      while (!done) {
+        await new Promise((r) => setTimeout(r, 3000))
+        const { ok: pollOk, data: pollData } = await fetchJson<{ batch: { status: string } }>(
+          `/api/extract/${batchId}`,
+        )
+        if (!pollOk || !pollData) continue
+        const s = pollData.batch.status
+        if (s === 'review' || s === 'failed' || s === 'committed' || s === 'discarded') {
+          done = true
+        }
+      }
+    }
+
+    router.push('/capture')
   }
 
   return (
     <div className="ios-card p-5 space-y-5">
-      {busy ? (
+      {uploading ? (
         <div className="flex flex-col items-center gap-3 py-6">
           <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#0a84ff' }} />
           <p className="text-[14px]" style={{ color: 'rgba(235,235,245,0.7)' }}>
-            Uploading… you'll be able to review transactions shortly.
+            Uploading files…
+          </p>
+        </div>
+      ) : queue ? (
+        <div className="flex flex-col items-center gap-3 py-6">
+          <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#0a84ff' }} />
+          <p className="text-[14px] font-medium text-white">
+            Extracting {queue.current} of {queue.total}
+          </p>
+          <p className="text-[13px] text-center truncate max-w-full px-4" style={{ color: 'rgba(235,235,245,0.55)' }}>
+            {queue.name}
+          </p>
+          <p className="text-[12px]" style={{ color: 'rgba(235,235,245,0.35)' }}>
+            You can navigate away — remaining files will continue after you return.
           </p>
         </div>
       ) : (
