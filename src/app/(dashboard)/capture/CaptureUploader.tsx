@@ -54,26 +54,48 @@ export function CaptureUploader() {
     setUploading(false)
 
     const { batches } = data
+    const failedNames: string[] = []
     for (let i = 0; i < batches.length; i++) {
       const { batchId, name } = batches[i]
       setQueue({ current: i + 1, total: batches.length, name })
 
-      await fetchJson(`/api/extract/${batchId}/run`, { method: 'POST' })
+      const { ok: runOk, error: runErr } = await fetchJson(`/api/extract/${batchId}/run`, { method: 'POST' })
+      if (!runOk) {
+        setError(runErr ?? `Failed to start extraction for "${name}"`)
+        setQueue(null)
+        return
+      }
 
       let done = false
+      let failures = 0
       while (!done) {
         await new Promise((r) => setTimeout(r, 3000))
         const { ok: pollOk, data: pollData } = await fetchJson<{ batch: { status: string } }>(
           `/api/extract/${batchId}`,
         )
-        if (!pollOk || !pollData) continue
+        if (!pollOk || !pollData) {
+          failures++
+          if (failures >= 5) {
+            setError(`Lost connection while processing "${name}". Check Recent for status.`)
+            setQueue(null)
+            return
+          }
+          continue
+        }
+        failures = 0
         const s = pollData.batch.status
+        if (s === 'failed') failedNames.push(name)
         if (s === 'review' || s === 'failed' || s === 'committed' || s === 'discarded') {
           done = true
         }
       }
     }
 
+    if (failedNames.length > 0) {
+      setError(`${failedNames.length} file(s) failed to extract: ${failedNames.join(', ')}. You can retry from the Recent list.`)
+      setQueue(null)
+      return
+    }
     router.push('/capture')
   }
 
@@ -94,9 +116,6 @@ export function CaptureUploader() {
           </p>
           <p className="text-[13px] text-center truncate max-w-full px-4" style={{ color: 'rgba(235,235,245,0.55)' }}>
             {queue.name}
-          </p>
-          <p className="text-[12px]" style={{ color: 'rgba(235,235,245,0.35)' }}>
-            You can navigate away — remaining files will continue after you return.
           </p>
         </div>
       ) : (
