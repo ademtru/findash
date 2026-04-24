@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, ImagePlus, Loader2, X } from 'lucide-react'
+import { Camera, FileText, ImagePlus, Loader2, X } from 'lucide-react'
 import { fetchJson } from '@/lib/fetch-json'
 
 export function CaptureUploader() {
@@ -13,6 +13,7 @@ export function CaptureUploader() {
   const [error, setError] = useState<string | null>(null)
   const cameraRef = useRef<HTMLInputElement>(null)
   const libraryRef = useRef<HTMLInputElement>(null)
+  const documentRef = useRef<HTMLInputElement>(null)
 
   function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return
@@ -56,7 +57,7 @@ export function CaptureUploader() {
         <div className="flex flex-col items-center gap-3 py-6">
           <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#0a84ff' }} />
           <p className="text-[14px]" style={{ color: 'rgba(235,235,245,0.7)' }}>
-            Extracting transactions… this can take 10–30 seconds.
+            Uploading… you'll be able to review transactions shortly.
           </p>
         </div>
       ) : (
@@ -80,6 +81,20 @@ export function CaptureUploader() {
             </button>
           </div>
 
+          <button
+            type="button"
+            onClick={() => documentRef.current?.click()}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[14px] font-medium border-2 border-dashed"
+            style={{
+              background: 'rgba(10,132,255,0.06)',
+              color: '#0a84ff',
+              borderColor: 'rgba(10,132,255,0.35)',
+            }}
+          >
+            <FileText className="h-4 w-4" />
+            Choose PDF or CSV
+          </button>
+
           <input
             ref={cameraRef}
             type="file"
@@ -92,6 +107,14 @@ export function CaptureUploader() {
             ref={libraryRef}
             type="file"
             accept="image/*"
+            multiple
+            className="hidden"
+            onChange={(e) => addFiles(e.target.files)}
+          />
+          <input
+            ref={documentRef}
+            type="file"
+            accept=".pdf,.csv,application/pdf,text/csv"
             multiple
             className="hidden"
             onChange={(e) => addFiles(e.target.files)}
