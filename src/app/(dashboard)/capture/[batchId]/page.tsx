@@ -7,6 +7,8 @@ import { mergeCategoriesForType } from '@/lib/categories'
 import { ExtractedTransactionSchema } from '@/lib/ai/schemas'
 import type { ExtractedTransaction } from '@/lib/ai/schemas'
 import { ReviewGrid, type PendingItem } from './ReviewGrid'
+import { BatchPoller } from './BatchPoller'
+import { RetryButton } from './RetryButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -77,12 +79,19 @@ export default async function CaptureBatchPage({
         </p>
       </div>
 
+      {(batch.status === 'pending' || batch.status === 'extracting') && (
+        <BatchPoller batchId={batchId} initialStatus={batch.status} />
+      )}
+
       {batch.status === 'failed' && (
-        <div
-          className="rounded-xl p-4 text-[14px]"
-          style={{ background: 'rgba(255,69,58,0.1)', color: '#ff453a' }}
-        >
-          Extraction failed: {batch.error ?? 'unknown error'}
+        <div className="space-y-3">
+          <div
+            className="rounded-xl p-4 text-[14px]"
+            style={{ background: 'rgba(255,69,58,0.1)', color: '#ff453a' }}
+          >
+            Extraction failed: {batch.error ?? 'unknown error'}
+          </div>
+          <RetryButton batchId={batchId} />
         </div>
       )}
 
@@ -104,29 +113,31 @@ export default async function CaptureBatchPage({
         </p>
       )}
 
-      {batch.status === 'committed' ? (
-        <div
-          className="rounded-xl p-5 text-center space-y-2"
-          style={{ background: 'rgba(48,209,88,0.12)' }}
-        >
-          <p className="text-[16px] font-semibold" style={{ color: '#30d158' }}>
-            Committed ✓
-          </p>
-          <Link
-            href="/transactions"
-            className="inline-block text-[14px] font-medium"
-            style={{ color: '#0a84ff' }}
+      {(batch.status === 'review' || batch.status === 'committed') && (
+        batch.status === 'committed' ? (
+          <div
+            className="rounded-xl p-5 text-center space-y-2"
+            style={{ background: 'rgba(48,209,88,0.12)' }}
           >
-            View transactions →
-          </Link>
-        </div>
-      ) : (
-        <ReviewGrid
-          batchId={batchId}
-          items={items}
-          categoryOptionsByType={allCategoryOptions}
-          readOnly={batch.status !== 'review'}
-        />
+            <p className="text-[16px] font-semibold" style={{ color: '#30d158' }}>
+              Committed ✓
+            </p>
+            <Link
+              href="/transactions"
+              className="inline-block text-[14px] font-medium"
+              style={{ color: '#0a84ff' }}
+            >
+              View transactions →
+            </Link>
+          </div>
+        ) : (
+          <ReviewGrid
+            batchId={batchId}
+            items={items}
+            categoryOptionsByType={allCategoryOptions}
+            readOnly={batch.status !== 'review'}
+          />
+        )
       )}
     </div>
   )
