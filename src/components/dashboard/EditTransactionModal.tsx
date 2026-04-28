@@ -35,6 +35,15 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
     [type],
   )
 
+  function handleTypeChange(t: TransactionType) {
+    setType(t)
+    setCategory('')
+    if (t !== 'investment') {
+      setTicker('')
+      setShares('')
+    }
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -62,7 +71,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
     }
     const { ok, error: err } = await fetchJson(
       `/api/transactions/${encodeURIComponent(transaction.id)}`,
-      { method: 'PATCH', body: JSON.stringify(body) },
+      { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) },
     )
     setSubmitting(false)
     if (!ok) { setError(err ?? 'Save failed'); return }
@@ -77,7 +86,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div
-        className="w-full max-w-md rounded-2xl p-5 space-y-4"
+        className="w-full max-w-md rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto"
         style={{ background: '#1c1c1e' }}
       >
         <div className="flex items-center justify-between">
@@ -92,7 +101,7 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
           {/* Type toggle */}
           <div className="grid grid-cols-4 rounded-xl p-[3px]" style={{ background: 'rgba(120,120,128,0.16)' }}>
             {(['expense', 'income', 'transfer', 'investment'] as TransactionType[]).map((t) => (
-              <button key={t} type="button" onClick={() => setType(t)}
+              <button key={t} type="button" onClick={() => handleTypeChange(t)}
                 className="py-1.5 rounded-lg text-[13px] font-medium transition-all capitalize"
                 style={type === t
                   ? { background: 'rgba(118,118,128,0.24)', color: '#fff' }
