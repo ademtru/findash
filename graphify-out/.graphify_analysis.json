@@ -1,0 +1,762 @@
+{
+  "communities": {
+    "0": [
+      "auth_verifysessioncookie",
+      "insights_computeholdings",
+      "insights_computeholdingsfortransactions",
+      "insights_computetotals",
+      "insights_generateinsightforperiod",
+      "insights_getinsightbyperiod",
+      "insights_listinsights",
+      "insights_loadtxnsinrange",
+      "insights_sha256",
+      "insights_upsertinsight",
+      "middleware_middleware",
+      "periods_adddays",
+      "periods_inrange",
+      "periods_isoweek",
+      "periods_isoweekrange",
+      "periods_monthrange",
+      "periods_previousisoweekkey",
+      "periods_previousmonthkey",
+      "periods_referencemonthrange",
+      "periods_referenceweekrange",
+      "periods_weekkey",
+      "periods_ymd",
+      "route_get",
+      "src_app_api_accounts_route_ts",
+      "src_app_api_budgets_route_ts",
+      "src_app_api_cron_monthly_insights_route_ts",
+      "src_app_api_cron_weekly_insights_route_ts",
+      "src_app_api_extract_batchid_route_ts",
+      "src_app_api_insights_route_ts",
+      "src_app_api_investments_prices_route_ts",
+      "src_app_api_transactions_route_ts",
+      "src_db_queries_insights_ts",
+      "src_lib_ai_insights_ts",
+      "src_lib_periods_ts",
+      "src_middleware_ts"
+    ],
+    "1": [
+      "accountssettings_handleadd",
+      "accountssettings_handledelete",
+      "budgetlist_beginedit",
+      "budgetlist_canceledit",
+      "budgetlist_copyprev",
+      "budgetlist_remove",
+      "budgetlist_save",
+      "captureuploader_addfiles",
+      "captureuploader_removefile",
+      "captureuploader_submit",
+      "fetch_json_fetchjson",
+      "insightsview_go",
+      "reviewgrid_patch",
+      "reviewgrid_setdecision",
+      "reviewgrid_submit",
+      "src_app_dashboard_budgets_budgetlist_tsx",
+      "src_app_dashboard_capture_batchid_reviewgrid_tsx",
+      "src_app_dashboard_capture_captureuploader_tsx",
+      "src_app_dashboard_insights_insightsview_tsx",
+      "src_app_dashboard_settings_accountssettings_tsx",
+      "src_components_dashboard_transactionstable_tsx",
+      "src_lib_fetch_json_ts",
+      "transactionstable_amountcell",
+      "transactionstable_confirmcombine",
+      "transactionstable_confirmdelete",
+      "transactionstable_exitcombinemode",
+      "transactionstable_formatnet",
+      "transactionstable_startcombinefrom",
+      "transactionstable_toggleselect",
+      "transactionstable_ungroup"
+    ],
+    "2": [
+      "auth_createsessioncookie",
+      "auth_hashpassword",
+      "auth_verifypassword",
+      "dedup_amountcents",
+      "dedup_daydiff",
+      "dedup_findfuzzyduplicate",
+      "id_generatetransactionid",
+      "id_merchantslug",
+      "id_randomsuffix",
+      "id_tocents",
+      "route_classify",
+      "route_post",
+      "route_sizelimit",
+      "src_app_api_ai_categorize_route_ts",
+      "src_app_api_auth_login_route_ts",
+      "src_app_api_auth_logout_route_ts",
+      "src_app_api_budgets_copy_last_month_route_ts",
+      "src_app_api_extract_batchid_commit_route_ts",
+      "src_app_api_extract_batchid_run_route_ts",
+      "src_app_api_extract_route_ts",
+      "src_app_api_insights_regenerate_route_ts",
+      "src_app_api_transaction_groups_route_ts",
+      "src_lib_auth_ts",
+      "src_lib_transactions_dedup_ts",
+      "src_lib_transactions_id_ts"
+    ],
+    "3": [
+      "data_gettransactions",
+      "page_investmentspage",
+      "page_totalcell",
+      "page_transactionspage",
+      "src_app_dashboard_investments_page_tsx",
+      "src_app_dashboard_transactions_page_tsx",
+      "src_lib_data_ts",
+      "src_lib_transactions_ts",
+      "transactions_filterbycategory",
+      "transactions_filterbymonth",
+      "transactions_filterbytype",
+      "transactions_getavailablemonths",
+      "transactions_getinvestmentholdings",
+      "transactions_getnetcashflow",
+      "transactions_getnetworth",
+      "transactions_getsavingsrate",
+      "transactions_gettotalexpenses",
+      "transactions_gettotalincome",
+      "transactions_groupbycategory",
+      "transactions_groupbymonth",
+      "transactions_listtransactions"
+    ],
+    "4": [
+      "batches_clearpendingbybatch",
+      "categoryfilter_setcategory",
+      "monthselector_navigate",
+      "monthselector_onclickoutside",
+      "monthselector_onesc",
+      "quickaddform_addcustomcategory",
+      "quickaddform_submit",
+      "quickaddform_switchtype",
+      "quickaddform_todaylocal",
+      "route_delete",
+      "src_app_api_accounts_id_route_ts",
+      "src_app_api_budgets_id_route_ts",
+      "src_app_api_transaction_groups_groupid_route_ts",
+      "src_app_api_transactions_id_route_ts",
+      "src_app_dashboard_add_quickaddform_tsx",
+      "src_components_dashboard_categoryfilter_tsx",
+      "src_components_dashboard_monthselector_tsx",
+      "transactionstable_settype"
+    ],
+    "5": [
+      "page_addpage",
+      "src_app_dashboard_add_page_tsx",
+      "src_db_queries_transactions_ts",
+      "transactions_combinetransactions",
+      "transactions_deletetransaction",
+      "transactions_distinctcategories",
+      "transactions_gettransactionbyid",
+      "transactions_insertmanytransactions",
+      "transactions_inserttransaction",
+      "transactions_rowtotransaction",
+      "transactions_transactioncount",
+      "transactions_uncombinegroup",
+      "transactions_updatetransaction"
+    ],
+    "6": [
+      "batches_createbatch",
+      "batches_getbatch",
+      "batches_insertpendingrows",
+      "batches_listpendingbybatch",
+      "batches_listrecentbatches",
+      "batches_markpendingaction",
+      "batches_setbatchstatus",
+      "extract_buildreferenceset",
+      "extract_buildusercontent",
+      "extract_runextract",
+      "src_db_queries_batches_ts",
+      "src_lib_ai_extract_ts"
+    ],
+    "7": [
+      "filters_category_filter",
+      "filters_filter_by_category",
+      "filters_filter_by_type",
+      "filters_month_selector_grid",
+      "filters_refresh_button",
+      "filters_refresh_design",
+      "filters_refresh_plan",
+      "filters_spending_drilldown",
+      "monthly_view_design",
+      "monthly_view_filter_by_month",
+      "monthly_view_month_selector",
+      "monthly_view_plan"
+    ],
+    "8": [
+      "per_file_extraction_design",
+      "per_file_extraction_plan",
+      "per_file_filename_in_recent",
+      "per_file_one_batch_per_file",
+      "per_file_sequential_queue",
+      "unified_scan_async_split",
+      "unified_scan_batch_poller",
+      "unified_scan_design",
+      "unified_scan_gemini_decision",
+      "unified_scan_plan",
+      "unified_scan_retry",
+      "unified_scan_unified_screen"
+    ],
+    "9": [
+      "findash_design_architecture",
+      "findash_design_auth",
+      "findash_design_dashboard_pages",
+      "findash_design_insights_schema",
+      "findash_design_overview",
+      "findash_design_tech_stack",
+      "findash_design_transaction_schema",
+      "readme_findash",
+      "readme_password_auth",
+      "readme_transaction_schema",
+      "readme_vercel_blob_storage"
+    ],
+    "10": [
+      "accounts_deleteaccount",
+      "accounts_insertaccount",
+      "accounts_listaccounts",
+      "own_transfer_checkownaccounttransfer",
+      "own_transfer_extractlast4candidates",
+      "own_transfer_isownaccounttransfer",
+      "page_settingspage",
+      "src_app_dashboard_settings_page_tsx",
+      "src_db_queries_accounts_ts",
+      "src_lib_transactions_own_transfer_ts"
+    ],
+    "11": [
+      "budgets_currentmonthkey",
+      "budgets_getmonthspendbycategory",
+      "budgets_lastdayofmonth",
+      "budgets_monthprogress",
+      "budgets_nextmonth",
+      "budgets_pacestatus",
+      "budgets_prevmonth",
+      "budgets_resolvecapcents",
+      "src_lib_budgets_ts"
+    ],
+    "12": [
+      "categorize_loadactivecategories",
+      "categorize_loadmerchanthints",
+      "categorize_suggestcategory",
+      "prompts_buildcategoriseprompt",
+      "prompts_buildextractprompt",
+      "prompts_buildinsightprompt",
+      "prompts_fmtamount",
+      "src_lib_ai_categorize_ts",
+      "src_lib_ai_prompts_ts"
+    ],
+    "13": [
+      "budgets_copymonth",
+      "budgets_deletebudget",
+      "budgets_hasmonthbudgets",
+      "budgets_listallbudgets",
+      "budgets_listbudgetsformonth",
+      "budgets_rowtorecord",
+      "budgets_upsertbudget",
+      "src_db_queries_budgets_ts"
+    ],
+    "14": [
+      "sheet_cn",
+      "sheet_sheet",
+      "sheet_sheetclose",
+      "sheet_sheetdescription",
+      "sheet_sheetportal",
+      "sheet_sheettitle",
+      "sheet_sheettrigger",
+      "src_components_ui_sheet_tsx"
+    ],
+    "15": [
+      "migrate_appliedhashes",
+      "migrate_ensuremigrationstable",
+      "migrate_run",
+      "scripts_migrate_ts"
+    ],
+    "16": [
+      "badge_badge",
+      "src_components_ui_badge_tsx",
+      "src_lib_utils_ts",
+      "utils_cn"
+    ],
+    "17": [
+      "page_e",
+      "page_handlesubmit",
+      "src_app_login_page_tsx"
+    ],
+    "18": [
+      "card_cardaction",
+      "card_cn",
+      "src_components_ui_card_tsx"
+    ],
+    "19": [
+      "scroll_area_scrollarea",
+      "scroll_area_scrollbar",
+      "src_components_ui_scroll_area_tsx"
+    ],
+    "20": [
+      "sidebar_handlelogout",
+      "sidebar_navitem",
+      "src_components_layout_sidebar_tsx"
+    ],
+    "21": [
+      "scripts_smoke_phase1_ts",
+      "smoke_phase1_main"
+    ],
+    "22": [
+      "db_check_run",
+      "scripts_db_check_ts"
+    ],
+    "23": [
+      "db_reset_run",
+      "scripts_db_reset_ts"
+    ],
+    "24": [
+      "layout_rootlayout",
+      "src_app_layout_tsx"
+    ],
+    "25": [
+      "layout_dashboardlayout",
+      "src_app_dashboard_layout_tsx"
+    ],
+    "26": [
+      "page_serial",
+      "src_app_dashboard_insights_page_tsx"
+    ],
+    "27": [
+      "page_batchlabel",
+      "src_app_dashboard_capture_page_tsx"
+    ],
+    "28": [
+      "batchpoller_batchpoller",
+      "src_app_dashboard_capture_batchid_batchpoller_tsx"
+    ],
+    "29": [
+      "retrybutton_retrybutton",
+      "src_app_dashboard_capture_batchid_retrybutton_tsx"
+    ],
+    "30": [
+      "src_components_ui_tabs_tsx",
+      "tabs_cn"
+    ],
+    "31": [
+      "separator_cn",
+      "src_components_ui_separator_tsx"
+    ],
+    "32": [
+      "button_cn",
+      "src_components_ui_button_tsx"
+    ],
+    "33": [
+      "input_input",
+      "src_components_ui_input_tsx"
+    ],
+    "34": [
+      "bottomnav_bottomnav",
+      "src_components_layout_bottomnav_tsx"
+    ],
+    "35": [
+      "refreshbutton_refreshbutton",
+      "src_components_dashboard_refreshbutton_tsx"
+    ],
+    "36": [
+      "holdingstable_fmt",
+      "src_components_dashboard_holdingstable_tsx"
+    ],
+    "37": [
+      "anomalyalert_anomalyalert",
+      "src_components_dashboard_anomalyalert_tsx"
+    ],
+    "38": [
+      "spendingtrends_customtooltip",
+      "src_components_dashboard_spendingtrends_tsx"
+    ],
+    "39": [
+      "spendingdonut_handlecategoryclick",
+      "src_components_dashboard_spendingdonut_tsx"
+    ],
+    "40": [
+      "categories_mergecategoriesfortype",
+      "src_lib_categories_ts"
+    ],
+    "41": [
+      "client_createclient",
+      "src_db_client_ts"
+    ],
+    "42": [
+      "agents_nextjs_rules",
+      "claude_md_graphify_rules"
+    ],
+    "43": [
+      "mobilesettingslink_mobilesettingslink",
+      "src_components_dashboard_mobilesettingslink_tsx"
+    ],
+    "44": [
+      "pageskeleton_bone",
+      "src_components_dashboard_pageskeleton_tsx"
+    ],
+    "45": [
+      "src_components_dashboard_toast_tsx",
+      "toast_toast"
+    ],
+    "46": [
+      "prices_fetchprice",
+      "src_lib_prices_ts"
+    ],
+    "47": [
+      "postcss_config_mjs"
+    ],
+    "48": [
+      "next_env_d_ts"
+    ],
+    "49": [
+      "drizzle_config_ts"
+    ],
+    "50": [
+      "vitest_config_ts"
+    ],
+    "51": [
+      "eslint_config_mjs"
+    ],
+    "52": [
+      "next_config_ts"
+    ],
+    "53": [
+      "src_types_transaction_ts"
+    ],
+    "54": [
+      "src_app_dashboard_page_tsx"
+    ],
+    "55": [
+      "src_app_dashboard_capture_batchid_page_tsx"
+    ],
+    "56": [
+      "src_app_dashboard_spending_page_tsx"
+    ],
+    "57": [
+      "src_app_dashboard_budgets_page_tsx"
+    ],
+    "58": [
+      "src_test_setup_ts"
+    ],
+    "59": [
+      "src_test_lib_budgets_test_ts"
+    ],
+    "60": [
+      "src_test_lib_auth_test_ts"
+    ],
+    "61": [
+      "src_test_lib_transactions_test_ts"
+    ],
+    "62": [
+      "src_test_lib_transaction_dedup_test_ts"
+    ],
+    "63": [
+      "src_test_lib_batches_test_ts"
+    ],
+    "64": [
+      "src_test_lib_prompts_test_ts"
+    ],
+    "65": [
+      "src_test_lib_transaction_id_test_ts"
+    ],
+    "66": [
+      "src_test_lib_periods_test_ts"
+    ],
+    "67": [
+      "src_components_dashboard_insightcard_tsx"
+    ],
+    "68": [
+      "src_components_dashboard_cashflowchart_tsx"
+    ],
+    "69": [
+      "src_components_dashboard_budgetstrip_tsx"
+    ],
+    "70": [
+      "src_components_dashboard_statcard_tsx"
+    ],
+    "71": [
+      "src_lib_ai_schemas_ts"
+    ],
+    "72": [
+      "src_lib_ai_gateway_ts"
+    ],
+    "73": [
+      "src_db_schema_ts"
+    ],
+    "74": [
+      "public_file_svg"
+    ],
+    "75": [
+      "public_vercel_svg"
+    ],
+    "76": [
+      "public_next_svg"
+    ],
+    "77": [
+      "public_globe_svg"
+    ],
+    "78": [
+      "public_window_svg"
+    ],
+    "79": [
+      "src_app_dashboard_loading_tsx"
+    ],
+    "80": [
+      "src_app_dashboard_insights_loading_tsx"
+    ],
+    "81": [
+      "src_app_dashboard_settings_loading_tsx"
+    ],
+    "82": [
+      "src_app_dashboard_capture_loading_tsx"
+    ],
+    "83": [
+      "src_app_dashboard_spending_loading_tsx"
+    ],
+    "84": [
+      "src_app_dashboard_transactions_loading_tsx"
+    ],
+    "85": [
+      "src_app_dashboard_add_loading_tsx"
+    ],
+    "86": [
+      "src_app_dashboard_budgets_loading_tsx"
+    ],
+    "87": [
+      "src_app_dashboard_investments_loading_tsx"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1,
+    "1": 0.08,
+    "2": 0.11,
+    "3": 0.14,
+    "4": 0.13,
+    "5": 0.19,
+    "6": 0.2,
+    "7": 0.29,
+    "8": 0.33,
+    "9": 0.22,
+    "10": 0.24,
+    "11": 0.25,
+    "12": 0.31,
+    "13": 0.29,
+    "14": 0.25,
+    "15": 0.83,
+    "16": 0.5,
+    "17": 0.67,
+    "18": 0.67,
+    "19": 0.67,
+    "20": 0.67,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
+    "42": 1.0,
+    "43": 1.0,
+    "44": 1.0,
+    "45": 1.0,
+    "46": 1.0,
+    "47": 1.0,
+    "48": 1.0,
+    "49": 1.0,
+    "50": 1.0,
+    "51": 1.0,
+    "52": 1.0,
+    "53": 1.0,
+    "54": 1.0,
+    "55": 1.0,
+    "56": 1.0,
+    "57": 1.0,
+    "58": 1.0,
+    "59": 1.0,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0
+  },
+  "gods": [
+    {
+      "id": "route_post",
+      "label": "POST()",
+      "degree": 37
+    },
+    {
+      "id": "route_get",
+      "label": "GET()",
+      "degree": 26
+    },
+    {
+      "id": "insights_generateinsightforperiod",
+      "label": "generateInsightForPeriod()",
+      "degree": 15
+    },
+    {
+      "id": "route_delete",
+      "label": "DELETE()",
+      "degree": 13
+    },
+    {
+      "id": "fetch_json_fetchjson",
+      "label": "fetchJson()",
+      "degree": 11
+    },
+    {
+      "id": "page_transactionspage",
+      "label": "TransactionsPage()",
+      "degree": 8
+    },
+    {
+      "id": "extract_runextract",
+      "label": "runExtract()",
+      "degree": 8
+    },
+    {
+      "id": "filters_refresh_design",
+      "label": "Filters, Refresh & Category Drill-down Design",
+      "degree": 7
+    },
+    {
+      "id": "unified_scan_design",
+      "label": "Unified Scan + Async Extraction Design",
+      "degree": 7
+    },
+    {
+      "id": "findash_design_overview",
+      "label": "Findash Financial Dashboard Design",
+      "degree": 6
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Transaction JSON Schema",
+      "target": "Transaction Schema (Design Doc)",
+      "source_files": [
+        "README.md",
+        "docs/plans/2026-04-01-findash-design.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "semantically_similar_to",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; semantically similar concepts with no structural link"
+    },
+    {
+      "source": "Password-Protected Access (bcrypt)",
+      "target": "Auth Design \u2014 Middleware + Bcrypt Cookie Session",
+      "source_files": [
+        "README.md",
+        "docs/plans/2026-04-01-findash-design.md"
+      ],
+      "confidence": "INFERRED",
+      "relation": "semantically_similar_to",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; semantically similar concepts with no structural link"
+    },
+    {
+      "source": "GET()",
+      "target": "listAllBudgets()",
+      "source_files": [
+        "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+        "/Users/adems/projects/findash/src/db/queries/budgets.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `listAllBudgets()` unexpectedly reaches hub `GET()`"
+    },
+    {
+      "source": "GET()",
+      "target": "getMonthSpendByCategory()",
+      "source_files": [
+        "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+        "/Users/adems/projects/findash/src/lib/budgets.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `getMonthSpendByCategory()` unexpectedly reaches hub `GET()`"
+    },
+    {
+      "source": "POST()",
+      "target": "combineTransactions()",
+      "source_files": [
+        "/Users/adems/projects/findash/src/app/api/extract/[batchId]/run/route.ts",
+        "/Users/adems/projects/findash/src/db/queries/transactions.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities; peripheral node `combineTransactions()` unexpectedly reaches hub `POST()`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `POST()` connect `Community 2` to `Community 0`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 10`, `Community 11`, `Community 12`, `Community 13`?",
+      "why": "High betweenness centrality (0.178) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `DELETE()` connect `Community 4` to `Community 13`, `Community 2`, `Community 10`, `Community 5`?",
+      "why": "High betweenness centrality (0.122) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `setType()` connect `Community 4` to `Community 1`?",
+      "why": "High betweenness centrality (0.083) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 23 inferred relationships involving `POST()` (e.g. with `GET()` and `previousIsoWeekKey()`) actually correct?",
+      "why": "`POST()` has 23 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 17 inferred relationships involving `GET()` (e.g. with `middleware()` and `getInsightByPeriod()`) actually correct?",
+      "why": "`GET()` has 17 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 10 inferred relationships involving `generateInsightForPeriod()` (e.g. with `GET()` and `POST()`) actually correct?",
+      "why": "`generateInsightForPeriod()` has 10 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 9 inferred relationships involving `DELETE()` (e.g. with `POST()` and `uncombineGroup()`) actually correct?",
+      "why": "`DELETE()` has 9 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}

@@ -74,9 +74,23 @@ export function getInvestmentHoldings(transactions: Transaction[]) {
   for (const t of investments) {
     const ticker = t.ticker!
     if (!holdings[ticker]) holdings[ticker] = { shares: 0, cost: 0, ticker }
-    holdings[ticker].shares += t.shares ?? 0
-    holdings[ticker].cost += Math.abs(t.amount)
+    const h = holdings[ticker]
+    const txShares = t.shares ?? 0
+
+    if (txShares >= 0) {
+      // Buy: add shares and cost
+      h.shares += txShares
+      h.cost += Math.abs(t.amount)
+    } else {
+      // Sell: reduce cost proportionally using average cost basis
+      const sellShares = Math.abs(txShares)
+      if (h.shares > 0) {
+        const avgCost = h.cost / h.shares
+        h.cost -= sellShares * avgCost
+      }
+      h.shares += txShares
+    }
   }
 
-  return Object.values(holdings)
+  return Object.values(holdings).filter(h => h.shares > 0.00001)
 }

@@ -1,8 +1,9 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus } from 'lucide-react'
+import { Toast } from '@/components/dashboard/Toast'
 import { mergeCategoriesForType } from '@/lib/categories'
 import type { TransactionType } from '@/types/transaction'
 import { fetchJson } from '@/lib/fetch-json'
@@ -26,12 +27,15 @@ export function QuickAddForm({
   const [description, setDescription] = useState('')
   const [date, setDate] = useState(todayLocal())
   const [category, setCategory] = useState('')
+  const [ticker, setTicker] = useState('')
+  const [shares, setShares] = useState('')
   const [extraCategories, setExtraCategories] = useState<string[]>([])
   const [newCatOpen, setNewCatOpen] = useState(false)
   const [newCatValue, setNewCatValue] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [duplicate, setDuplicate] = useState<{ id: string; description: string } | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
 
   const signedAmount = useMemo(() => {
     const v = parseFloat(amount)
@@ -48,6 +52,8 @@ export function QuickAddForm({
   function switchType(t: TransactionType) {
     setType(t)
     setCategory('')
+    setTicker('')
+    setShares('')
   }
 
   function addCustomCategory() {
@@ -67,22 +73,34 @@ export function QuickAddForm({
       setError('Fill amount, description, and category')
       return
     }
+    if (type === 'investment' && !ticker.trim()) {
+      setError('Enter a ticker symbol (e.g. NDQ, AAPL)')
+      return
+    }
     setSubmitting(true)
+    const body: Record<string, unknown> = {
+      date,
+      amount: signedAmount,
+      type,
+      category,
+      description: description.trim(),
+      source: 'manual',
+      forceCreate,
+    }
+    if (type === 'investment') {
+      body.ticker = ticker.trim().toUpperCase()
+      const parsedShares = parseFloat(shares)
+      if (Number.isFinite(parsedShares) && parsedShares > 0) {
+        body.shares = parsedShares
+      }
+    }
     const { ok, status, data, error: err } = await fetchJson<{
       duplicateOf?: string
       transaction?: { description?: string }
     }>('/api/transactions', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        date,
-        amount: signedAmount,
-        type,
-        category,
-        description: description.trim(),
-        source: 'manual',
-        forceCreate,
-      }),
+      body: JSON.stringify(body),
     })
 
     if (status === 409 && data?.duplicateOf) {
@@ -99,15 +117,23 @@ export function QuickAddForm({
       return
     }
 
+    const savedDescription = description.trim()
+    const savedAmount = Math.abs(signedAmount!)
     setAmount('')
     setDescription('')
     setCategory('')
+    setTicker('')
+    setShares('')
     setSubmitting(false)
     router.refresh()
-    router.push('/transactions')
+    setToast(`${savedDescription} — $${savedAmount.toFixed(2)}`)
   }
 
+  const clearToast = useCallback(() => setToast(null), [])
+
   return (
+    <>
+      {toast && <Toast message={toast} onDone={clearToast} />}
     <form onSubmit={(e) => submit(e, false)} className="ios-card p-5 space-y-5">
       <TypeToggle value={type} onChange={switchType} />
 
@@ -135,6 +161,30 @@ export function QuickAddForm({
           className="w-full bg-transparent text-[17px] outline-none text-white placeholder:text-[rgba(235,235,245,0.25)] py-1"
         />
       </Field>
+
+      {type === 'investment' && (
+        <div className="flex gap-3">
+          <Field label="Ticker *">
+            <input
+              type="text"
+              placeholder="e.g. NDQ"
+              value={ticker}
+              onChange={(e) => setTicker(e.target.value.toUpperCase())}
+              className="w-full bg-transparent text-[17px] outline-none text-white placeholder:text-[rgba(235,235,245,0.25)] py-1 uppercase"
+            />
+          </Field>
+          <Field label="Units / Shares">
+            <input
+              inputMode="decimal"
+              type="text"
+              placeholder="0"
+              value={shares}
+              onChange={(e) => setShares(e.target.value.replace(/[^0-9.]/g, ''))}
+              className="w-full bg-transparent text-[17px] outline-none text-white placeholder:text-[rgba(235,235,245,0.25)] py-1"
+            />
+          </Field>
+        </div>
+      )}
 
       <div>
         <span
@@ -262,6 +312,7 @@ export function QuickAddForm({
         {submitting ? 'Saving…' : 'Add transaction'}
       </button>
     </form>
+    </>
   )
 }
 

@@ -1,0 +1,1028 @@
+{
+  "nodes": [
+    {
+      "id": "next_env_d_ts",
+      "label": "next-env.d.ts",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/next-env.d.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_api_investments_prices_route_ts",
+      "label": "route.ts",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "route_get",
+      "label": "GET()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_app_dashboard_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_insights_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/insights/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_settings_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/settings/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_capture_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/capture/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_spending_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/spending/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_transactions_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/transactions/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_add_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_add_quickaddform_tsx",
+      "label": "QuickAddForm.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "quickaddform_todaylocal",
+      "label": "todayLocal()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "quickaddform_switchtype",
+      "label": "switchType()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L52"
+    },
+    {
+      "id": "quickaddform_addcustomcategory",
+      "label": "addCustomCategory()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L59"
+    },
+    {
+      "id": "quickaddform_submit",
+      "label": "submit()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L68"
+    },
+    {
+      "id": "src_app_dashboard_budgets_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/budgets/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_investments_loading_tsx",
+      "label": "loading.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/loading.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_dashboard_investments_page_tsx",
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "page_investmentspage",
+      "label": "InvestmentsPage()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L10"
+    },
+    {
+      "id": "src_components_layout_bottomnav_tsx",
+      "label": "BottomNav.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "bottomnav_bottomnav",
+      "label": "BottomNav()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_components_dashboard_holdingstable_tsx",
+      "label": "HoldingsTable.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/HoldingsTable.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "holdingstable_fmt",
+      "label": "fmt()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/HoldingsTable.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "src_components_dashboard_mobilesettingslink_tsx",
+      "label": "MobileSettingsLink.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/MobileSettingsLink.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "mobilesettingslink_mobilesettingslink",
+      "label": "MobileSettingsLink()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/MobileSettingsLink.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_components_dashboard_pageskeleton_tsx",
+      "label": "PageSkeleton.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/PageSkeleton.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "pageskeleton_bone",
+      "label": "Bone()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/PageSkeleton.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_dashboard_toast_tsx",
+      "label": "Toast.tsx",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/Toast.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "toast_toast",
+      "label": "Toast()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/Toast.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "src_lib_prices_ts",
+      "label": "prices.ts",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/prices.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "prices_fetchprice",
+      "label": "fetchPrice()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/prices.ts",
+      "source_location": "L6"
+    },
+    {
+      "id": "src_lib_transactions_ts",
+      "label": "transactions.ts",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "transactions_gettotalincome",
+      "label": "getTotalIncome()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L4"
+    },
+    {
+      "id": "transactions_gettotalexpenses",
+      "label": "getTotalExpenses()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L10"
+    },
+    {
+      "id": "transactions_getnetcashflow",
+      "label": "getNetCashFlow()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "transactions_getsavingsrate",
+      "label": "getSavingsRate()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L20"
+    },
+    {
+      "id": "transactions_groupbycategory",
+      "label": "groupByCategory()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L30"
+    },
+    {
+      "id": "transactions_groupbymonth",
+      "label": "groupByMonth()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L38"
+    },
+    {
+      "id": "transactions_getnetworth",
+      "label": "getNetWorth()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L46"
+    },
+    {
+      "id": "transactions_getavailablemonths",
+      "label": "getAvailableMonths()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L50"
+    },
+    {
+      "id": "transactions_filterbymonth",
+      "label": "filterByMonth()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L55"
+    },
+    {
+      "id": "transactions_filterbycategory",
+      "label": "filterByCategory()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L60"
+    },
+    {
+      "id": "transactions_filterbytype",
+      "label": "filterByType()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L65"
+    },
+    {
+      "id": "transactions_getinvestmentholdings",
+      "label": "getInvestmentHoldings()",
+      "file_type": "code",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L70"
+    }
+  ],
+  "edges": [
+    {
+      "source": "next_env_d_ts",
+      "target": "users_adems_projects_findash_next_dev_types_routes_d_ts",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/next-env.d.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_investments_prices_route_ts",
+      "target": "server",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_investments_prices_route_ts",
+      "target": "prices",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_investments_prices_route_ts",
+      "target": "route_get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/api/investments/prices/route.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "refreshbutton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "mobilesettingslink",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "statcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "cashflowchart",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "spendingdonut",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "monthselector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "budgetstrip",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "transactions",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "date_fns",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "data",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "budgets",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_page_tsx",
+      "target": "budgets",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/page.tsx",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_insights_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/insights/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_settings_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/settings/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_capture_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/capture/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_spending_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/spending/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_transactions_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/transactions/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "toast",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "categories",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "transaction",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "fetch_json",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "quickaddform_todaylocal",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "quickaddform_switchtype",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L52",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "quickaddform_addcustomcategory",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_add_quickaddform_tsx",
+      "target": "quickaddform_submit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/add/QuickAddForm.tsx",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_budgets_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/budgets/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_loading_tsx",
+      "target": "pageskeleton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/loading.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "refreshbutton",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "holdingstable",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "spendingdonut",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "statcard",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "monthselector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "transactions",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "data",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "prices",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_dashboard_investments_page_tsx",
+      "target": "page_investmentspage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_layout_bottomnav_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_layout_bottomnav_tsx",
+      "target": "navigation",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_layout_bottomnav_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_layout_bottomnav_tsx",
+      "target": "bottomnav_bottomnav",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/layout/BottomNav.tsx",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_holdingstable_tsx",
+      "target": "holdingstable_fmt",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/HoldingsTable.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_mobilesettingslink_tsx",
+      "target": "link",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/MobileSettingsLink.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_mobilesettingslink_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/MobileSettingsLink.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_mobilesettingslink_tsx",
+      "target": "mobilesettingslink_mobilesettingslink",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/MobileSettingsLink.tsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_pageskeleton_tsx",
+      "target": "pageskeleton_bone",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/PageSkeleton.tsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_toast_tsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/Toast.tsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_toast_tsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/Toast.tsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_dashboard_toast_tsx",
+      "target": "toast_toast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/components/dashboard/Toast.tsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prices_ts",
+      "target": "yahoo_finance2",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/prices.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prices_ts",
+      "target": "cache",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/prices.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_prices_ts",
+      "target": "prices_fetchprice",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/prices.ts",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transaction",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "date_fns",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_gettotalincome",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_gettotalexpenses",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_getnetcashflow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_getsavingsrate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_groupbycategory",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_groupbymonth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_getnetworth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_getavailablemonths",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_filterbymonth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_filterbycategory",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L60",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_filterbytype",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_transactions_ts",
+      "target": "transactions_getinvestmentholdings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "transactions_getsavingsrate",
+      "target": "transactions_gettotalincome",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "/Users/adems/projects/findash/src/lib/transactions.ts",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "page_investmentspage",
+      "target": "transactions_getavailablemonths",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "page_investmentspage",
+      "target": "transactions_getinvestmentholdings",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "page_investmentspage",
+      "target": "transactions_filterbymonth",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "/Users/adems/projects/findash/src/app/(dashboard)/investments/page.tsx",
+      "source_location": "L23",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

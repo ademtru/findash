@@ -1,4 +1,5 @@
 import { RefreshButton } from '@/components/dashboard/RefreshButton'
+import { MobileSettingsLink } from '@/components/dashboard/MobileSettingsLink'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
@@ -54,7 +55,10 @@ export default async function OverviewPage({
     <div className="px-4 py-5 md:px-6 md:py-6 space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-[28px] font-bold text-white tracking-tight">Overview</h1>
-        <RefreshButton />
+        <div className="flex items-center gap-2">
+          <MobileSettingsLink />
+          <RefreshButton />
+        </div>
       </div>
 
       <MonthSelector months={months} />
