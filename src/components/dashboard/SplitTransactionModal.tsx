@@ -72,8 +72,8 @@ export function SplitTransactionModal({ transaction, onClose }: SplitTransaction
     )
     setSubmitting(false)
     if (!ok) { setError(err ?? 'Split failed'); return }
-    router.refresh()
     onClose()
+    router.refresh()
   }
 
   const balanced = Math.abs(totalAssigned - originalAbs) < 0.005

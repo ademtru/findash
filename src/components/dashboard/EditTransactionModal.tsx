@@ -75,8 +75,8 @@ export function EditTransactionModal({ transaction, onClose }: EditTransactionMo
     )
     setSubmitting(false)
     if (!ok) { setError(err ?? 'Save failed'); return }
-    router.refresh()
     onClose()
+    router.refresh()
   }
 
   return (
