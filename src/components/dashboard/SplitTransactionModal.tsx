@@ -78,6 +78,32 @@ export function SplitTransactionModal({ transaction, onClose }: SplitTransaction
 
   const balanced = Math.abs(totalAssigned - originalAbs) < 0.005
 
+  if (transaction.type === 'investment') {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+        style={{ background: 'rgba(0,0,0,0.6)' }}
+        onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      >
+        <div className="w-full max-w-md rounded-2xl p-5 space-y-4" style={{ background: '#1c1c1e' }}>
+          <div className="flex items-center justify-between">
+            <h2 className="text-[17px] font-semibold text-white">Split Transaction</h2>
+            <button type="button" onClick={onClose} className="p-1.5 rounded-full"
+              style={{ background: 'rgba(120,120,128,0.2)', color: 'rgba(235,235,245,0.6)' }}>
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+          <p className="text-[14px]" style={{ color: '#ff453a' }}>Investment transactions cannot be split.</p>
+          <button type="button" onClick={onClose}
+            className="w-full py-3 rounded-xl text-[15px] font-medium"
+            style={{ background: 'rgba(120,120,128,0.16)', color: 'rgba(235,235,245,0.7)' }}>
+            Close
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
