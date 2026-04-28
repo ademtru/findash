@@ -18,6 +18,10 @@ describe('validateSplits', () => {
     expect(validateSplits(100, [{ amount: 100 }])).not.toBeNull()
   })
 
+  it('returns error when splits array is empty', () => {
+    expect(validateSplits(100, [])).not.toBeNull()
+  })
+
   it('returns error when any split has zero amount', () => {
     expect(validateSplits(100, [{ amount: 100 }, { amount: 0 }])).not.toBeNull()
   })
