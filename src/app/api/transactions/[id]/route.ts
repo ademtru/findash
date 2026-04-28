@@ -33,7 +33,7 @@ const PatchBody = z.object({
   ticker: z.string().nullable().optional(),
   shares: z.number().nullable().optional(),
   price_per_share: z.number().nullable().optional(),
-})
+}).refine(obj => Object.keys(obj).length > 0, { message: 'At least one field required' })
 
 export async function PATCH(
   request: NextRequest,
