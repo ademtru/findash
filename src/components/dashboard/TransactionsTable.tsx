@@ -3,8 +3,11 @@ import { useState, useMemo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { Search, Trash2, Check, X, Loader2, Link2, Unlink2 } from 'lucide-react'
+import { Pencil, Scissors } from 'lucide-react'
 import type { Transaction } from '@/types/transaction'
 import { fetchJson } from '@/lib/fetch-json'
+import { EditTransactionModal } from './EditTransactionModal'
+import { SplitTransactionModal } from './SplitTransactionModal'
 
 const TYPE_CONFIG: Record<string, { color: string; bg: string }> = {
   income:     { color: '#30d158', bg: 'rgba(48,209,88,0.15)'  },
@@ -43,6 +46,12 @@ export function TransactionsTable({ transactions, selectedType }: TransactionsTa
   const [combining, setCombining] = useState(false)
   const [combineError, setCombineError] = useState<string | null>(null)
   const [ungroupingIds, setUngroupingIds] = useState<Set<string>>(new Set())
+
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [splittingId, setSplittingId] = useState<string | null>(null)
+
+  const editingTransaction = editingId ? transactions.find(t => t.id === editingId) ?? null : null
+  const splittingTransaction = splittingId ? transactions.find(t => t.id === splittingId) ?? null : null
 
   function setType(type: string | null) {
     const params = new URLSearchParams(searchParams.toString())
@@ -384,6 +393,16 @@ export function TransactionsTable({ transactions, selectedType }: TransactionsTa
                             <Link2 className="h-3.5 w-3.5" />
                           </button>
                         )}
+                        <button type="button" onClick={() => setEditingId(t.id)}
+                          className="p-1.5 rounded-md" style={{ color: 'rgba(235,235,245,0.4)' }} title="Edit">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                        {!isGrouped && (
+                          <button type="button" onClick={() => setSplittingId(t.id)}
+                            className="p-1.5 rounded-md" style={{ color: 'rgba(235,235,245,0.4)' }} title="Split">
+                            <Scissors className="h-3.5 w-3.5" />
+                          </button>
+                        )}
                         <button type="button" onClick={() => { setPendingDelete(t.id); setDeleteError(null) }}
                           className="p-1.5 rounded-md" style={{ color: 'rgba(235,235,245,0.5)' }}>
                           <Trash2 className="h-3.5 w-3.5" />
@@ -531,6 +550,20 @@ export function TransactionsTable({ transactions, selectedType }: TransactionsTa
                       {isDeleting ? <Loader2 className="h-3 w-3 animate-spin" /> : <Trash2 className="h-3 w-3" />}
                       Delete
                     </button>
+                    <button type="button" onClick={() => { setPendingDelete(null); setEditingId(t.id) }}
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[12px] font-semibold"
+                      style={{ background: 'rgba(120,120,128,0.16)', color: 'rgba(235,235,245,0.7)' }}>
+                      <Pencil className="h-3 w-3" />
+                      Edit
+                    </button>
+                    {!isGrouped && (
+                      <button type="button" onClick={() => { setPendingDelete(null); setSplittingId(t.id) }}
+                        className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[12px] font-semibold"
+                        style={{ background: 'rgba(120,120,128,0.16)', color: 'rgba(235,235,245,0.7)' }}>
+                        <Scissors className="h-3 w-3" />
+                        Split
+                      </button>
+                    )}
                     {!isGrouped && (
                       <button type="button" onClick={() => startCombineFrom(t.id)}
                         className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[12px] font-semibold"
@@ -592,6 +625,19 @@ export function TransactionsTable({ transactions, selectedType }: TransactionsTa
           </div>
         )}
       </div>
+
+      {editingTransaction && (
+        <EditTransactionModal
+          transaction={editingTransaction}
+          onClose={() => setEditingId(null)}
+        />
+      )}
+      {splittingTransaction && (
+        <SplitTransactionModal
+          transaction={splittingTransaction}
+          onClose={() => setSplittingId(null)}
+        />
+      )}
     </div>
   )
 }
