@@ -38,6 +38,7 @@ export default async function BudgetsPage({
     ...spendMap.keys(),
   ])
 
+
   // Map groupId → the expense transaction's category (for routing non-expense group members)
   const groupExpenseCategoryMap = new Map<string, string>()
   for (const t of txns) {
@@ -156,6 +157,7 @@ export default async function BudgetsPage({
         month={month}
         categories={categories}
         canCopyFromPrev={prevMonthHasBudgets}
+        userHistoryCategories={userCategories}
       />
     </div>
   )
