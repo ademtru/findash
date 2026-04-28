@@ -21,6 +21,10 @@ export async function POST(
   const original = await getTransactionById(id)
   if (!original) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
+  if (original.type === 'investment') {
+    return NextResponse.json({ error: 'Investment transactions cannot be split' }, { status: 422 })
+  }
+
   let body: z.infer<typeof SplitBody>
   try {
     body = SplitBody.parse(await request.json())
