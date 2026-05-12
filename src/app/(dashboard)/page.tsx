@@ -6,6 +6,7 @@ import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
 import { BudgetStrip } from '@/components/dashboard/BudgetStrip'
 import { FireSummaryCard } from '@/components/dashboard/FireSummaryCard'
+import { AccountsCard } from '@/components/dashboard/AccountsCard'
 import {
   getTotalIncome, getTotalExpenses, getNetWorth,
   getSavingsRate, groupByCategory, groupByMonth, filterByMonth, getAvailableMonths,
@@ -82,7 +83,12 @@ export default async function OverviewPage({
         month={month ?? currentMonthKey()}
       />
 
-      {!month && <FireSummaryCard />}
+      {!month && (
+        <div className="grid md:grid-cols-2 gap-4">
+          <FireSummaryCard />
+          <AccountsCard />
+        </div>
+      )}
 
       <div className={month ? 'grid grid-cols-1' : 'grid md:grid-cols-2 gap-4'}>
         {!month && <CashFlowChart data={cashFlowData} />}
