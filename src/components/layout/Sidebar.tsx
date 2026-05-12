@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, ArrowLeftRight, PieChart, TrendingUp,
-  Sparkles, LogOut, Plus, ScanLine, Wallet, Settings,
+  Sparkles, LogOut, Plus, ScanLine, Wallet, Settings, Flame,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { href: '/budgets',      label: 'Budgets',      icon: Wallet },
   { href: '/spending',     label: 'Spending',     icon: PieChart },
   { href: '/investments',  label: 'Investments',  icon: TrendingUp },
+  { href: '/fire',         label: 'FIRE',         icon: Flame },
   { href: '/insights',     label: 'AI Insights',  icon: Sparkles },
 ]
 
