@@ -5,6 +5,7 @@ import { CashFlowChart } from '@/components/dashboard/CashFlowChart'
 import { SpendingDonut } from '@/components/dashboard/SpendingDonut'
 import { MonthSelector } from '@/components/dashboard/MonthSelector'
 import { BudgetStrip } from '@/components/dashboard/BudgetStrip'
+import { FireSummaryCard } from '@/components/dashboard/FireSummaryCard'
 import {
   getTotalIncome, getTotalExpenses, getNetWorth,
   getSavingsRate, groupByCategory, groupByMonth, filterByMonth, getAvailableMonths,
@@ -80,6 +81,8 @@ export default async function OverviewPage({
         transactions={transactions}
         month={month ?? currentMonthKey()}
       />
+
+      {!month && <FireSummaryCard />}
 
       <div className={month ? 'grid grid-cols-1' : 'grid md:grid-cols-2 gap-4'}>
         {!month && <CashFlowChart data={cashFlowData} />}
