@@ -134,8 +134,16 @@ export const accounts = pgTable('accounts', {
   name: text('name').notNull(),
   institution: text('institution'),
   last4: char('last4', { length: 4 }).notNull(),
+  type: text('type').notNull().default('cash'),
+  startingBalance: numeric('starting_balance', { precision: 14, scale: 2 }).notNull().default('0'),
+  startingDate: date('starting_date').notNull().default('1970-01-01'),
+  balanceSnapshot: numeric('balance_snapshot', { precision: 14, scale: 2 }),
+  snapshotAt: timestamp('snapshot_at', { withTimezone: true }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 })
+
+export const ACCOUNT_TYPES = ['cash', 'brokerage', 'credit', 'loan'] as const
+export type AccountType = (typeof ACCOUNT_TYPES)[number]
 
 export type AccountRow = typeof accounts.$inferSelect
 export type NewAccountRow = typeof accounts.$inferInsert

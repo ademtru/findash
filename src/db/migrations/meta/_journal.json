@@ -15,6 +15,13 @@
       "when": 1776927436472,
       "tag": "0001_redundant_ulik",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778581428575,
+      "tag": "0002_strong_anita_blake",
+      "breakpoints": true
     }
   ]
 }
